@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss'
+const { colors, typography } = require('./config/theme')
 
 const config: Config = {
   content: [
@@ -8,13 +9,38 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      screens: {
+        mobile: '480px',
+        tablet: '768px',
+        desktop: '1280px'
       },
-    },
+      colors: {
+        ...colors,
+        primary: colors.gray[800],
+        secondary: colors.gray[600],
+        tertiary: colors.gray[400],
+        disabled: colors.gray[200]
+      },
+      backgroundColor: {
+        'surface-soft': colors.gray[100],
+        'surface-medium': colors.gray[200],
+        'surface-hard': colors.gray[500],
+        button: colors.gray[900],
+        'button-secondary': colors.gray[100],
+        tab: colors.gray[0]
+      },
+      borderColor: {
+        primary: colors.gray[800],
+        secondary: colors.gray[600],
+        tertiary: colors.gray[400],
+        disabled: colors.gray[200],
+        surfacehard: colors.gray[500],
+      },
+      fontSize: {
+        ...typography
+      }
+    }
   },
-  plugins: [],
+  plugins: [require('flowbite/plugin')],
 }
 export default config
