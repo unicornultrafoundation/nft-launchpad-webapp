@@ -5,13 +5,14 @@ import Stepper from '@/components/Stepper'
 import Button from '@/components/Button'
 
 export default function ProjectSlide() {
+  const activeStep = 1
+
   const steps = [
     { label: 'Round Zero', value: 1 },
     { label: 'Whitelist', icon: "check", value: 2 },
     { label: 'Public', icon: "auction", value: 3 },
   ]
 
-  const activeStep = 1
   return (
     <div>
       <div className="flex justify-center desktop:gap-8 mb-10">

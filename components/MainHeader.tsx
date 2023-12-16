@@ -5,7 +5,7 @@ import Button from '@/components/Button'
 
 export default function MainHeader() {
   return (
-    <nav className={`h-[88px] bg-white border-gray-200 px-4 tablet:px-7`}>
+    <nav className={`h-[88px] bg-white border-gray-200 px-4 tablet:px-7 desktop:px-20`}>
       <div className="flex flex-wrap items-center justify-between mx-auto py-4">
         <div className="flex items-center gap-6">
           <Link href="/" className="w-fit">

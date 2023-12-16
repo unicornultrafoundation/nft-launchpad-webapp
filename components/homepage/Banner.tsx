@@ -14,13 +14,11 @@ export default function HomePageBanner() {
     slidesToScroll: 1
   }
 
-
-
   return (
-    <div className="w-full h-full">
-      <div className="text-heading-md text-body-16 text-white" />
+    <div className="w-full h-full desktop:py-[60px] mx-auto">
+      <div className="text-heading-md text-body-16 text-white hidden" />
       <Slider {...settings}>
-        <ProjectSlide/>
+        <ProjectSlide />
       </Slider>
     </div>
   )

@@ -1,6 +1,9 @@
+'use client'
+
 import { classNames } from '@/utils'
 import Icon from '@/components/Icon'
 import Text from '@/components/Text'
+import { useMemo } from 'react'
 
 interface Step {
   value: number
@@ -19,12 +22,12 @@ interface StepProps extends React.HTMLAttributes<HTMLDivElement> {
   active?: boolean
 }
 
-export const Step = ({ step: { label, icon, value }, active, ...rest }: StepProps) => {
+const Step = ({ step: { label, icon, value }, active, ...rest }: StepProps) => {
   return (
     <div
       className={classNames(
         "w-8 h-8 rounded-full flex justify-center items-center relative",
-        active ? 'bg-success' : 'bg-blue-300'
+        active ? 'bg-success' : 'bg-blue-300',
       )}
       {...rest}>
 
@@ -42,8 +45,9 @@ export const Step = ({ step: { label, icon, value }, active, ...rest }: StepProp
 }
 
 export default function Stepper({ current = 0, steps }: StepsProps) {
+  const hasLabel = useMemo(() => steps.some(step => !!step.label), [steps])
   return (
-    <div className="flex items-center">
+    <div className={classNames("flex items-center", hasLabel && 'mb-6')}>
       {steps.map((item, index) => {
           const isActive = current === item.value
           return (
