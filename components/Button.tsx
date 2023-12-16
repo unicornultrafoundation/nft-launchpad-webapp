@@ -1,6 +1,7 @@
+'use client'
+
 import { useMemo } from 'react'
 import { classNames } from '@/utils'
-import { Spinner } from 'flowbite-react'
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   scale?: 'sm' | 'md' | 'lg'
@@ -80,7 +81,6 @@ export default function Button({
         {
           loading ? (
             <>
-              <Spinner size="sm" />
               {loadingText || 'Loading...'}
             </>
 

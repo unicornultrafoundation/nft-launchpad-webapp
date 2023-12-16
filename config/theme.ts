@@ -51,11 +51,12 @@ export const colors = {
 }
 
 export const typography = {
-  'heading-xl': ['64px', {
+  'heading-lg': ['40px', {
     lineHeight: '77px',
-    letterSpacing: '-1px'
+    letterSpacing: '-1px',
+    fontWeight: 600
   }],
-  'heading-md': ['40px', {
+  'heading-md': ['32px', {
     lineHeight: '48px',
     letterSpacing: '-1px'
   }],

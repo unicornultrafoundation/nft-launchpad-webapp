@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'SFPro';
+  src: url('/fonts/SF-Pro-Display-Regular.otf');
+}
+
+body {
+  font-family: 'SFPro', 'system-ui', 'Arial';
+  background-color: #FFF;
+}

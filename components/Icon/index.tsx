@@ -25,6 +25,9 @@ import ShoppingBagIcon from './ShoppingBag'
 import SearchIcon from "./Search";
 import U2NftMobileIcon from "./U2NftMobile";
 import CloseIcon from '@/components/Icon/Close'
+import RoundZeroIcon from '@/components/Icon/RoundZero'
+import CheckIcon from '@/components/Icon/Check'
+import AuctionIcon from '@/components/Icon/Auction'
 
 type Color = keyof typeof defaultColors & keyof typeof colors
 
@@ -90,6 +93,12 @@ export default function Icon({ name, width, height, ...rest }: IconProps & {
         return <U2NftMobileIcon width={iconW} height={iconH} {...rest} />
       case 'close':
         return <CloseIcon width={iconW} height={iconH} {...rest} />
+      case 'round-zero':
+        return <RoundZeroIcon width={iconW} height={iconH} {...rest} />
+      case 'check':
+        return <CheckIcon width={iconW} height={iconH} {...rest} />
+      case 'auction':
+        return <AuctionIcon width={iconW} height={iconH} {...rest} />
       default:
         return null
     }
