@@ -22,12 +22,6 @@ export const u2uChain = defineChain({
     etherscan: { name: 'u2uScan', url: BLOCK_EXPLORER_URL },
     default: { name: 'u2uScan', url: BLOCK_EXPLORER_URL }
   }
-  // contracts: {
-  //   multicall3: {
-  //     address: '0xca11bde05977b3631167028862be2a173976ca11',
-  //     blockCreated: 11_907_934,
-  //   },
-  // }
 })
 
 const { publicClient } = configureChains(
