@@ -3,6 +3,7 @@ import Text from '@/components/Text'
 import Icon from '@/components/Icon'
 import Stepper from '@/components/Stepper'
 import Button from '@/components/Button'
+import Link from 'next/link'
 
 export default function ProjectSlide() {
   const activeStep = 1
@@ -64,9 +65,11 @@ export default function ProjectSlide() {
           {/** Project Rounds **/}
           <Stepper current={activeStep} steps={steps} />
 
-          <Button className="w-[300px]">
-            Details
-          </Button>
+          <Link href={`/project/1`}>
+            <Button className="w-[300px]">
+              Details
+            </Button>
+          </Link>
         </div>
 
       </div>

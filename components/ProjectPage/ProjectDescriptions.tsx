@@ -25,7 +25,7 @@ export default function ProjectPageDescriptions() {
 
       <div>
         <h1 className="text-heading-sm mb-6">Team</h1>
-        <div className="bg-surface-medium rounded-lg px-4 py-3">
+        <div className="bg-surface-soft rounded-lg px-4 py-3">
           <p className="text-body-16 text-secondary">
             Unicorn ultra
           </p>

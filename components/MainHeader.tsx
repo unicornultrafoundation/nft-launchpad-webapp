@@ -10,28 +10,31 @@ import { useAccount } from 'wagmi'
 
 export default function MainHeader() {
   const { address } = useAccount()
-  return (
-    <nav className={`h-[88px] bg-white border-gray-200 px-4 tablet:px-7 desktop:px-20`}>
-      <div className="flex flex-wrap items-center justify-between mx-auto py-4">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="w-fit">
-            <Image
-              className="h-10 object-contain desktop:w-[248px] tablet:w-fit"
-              height={100}
-              src={brandingSvg}
-              alt="u2u-brand" />
-          </Link>
-        </div>
 
-        <ConnectWalletButton>
-          <div className="flex items-center gap-2">
-            <Image src={avatar} width={40} height={40} alt="user"/>
-            <p className="text-secondary font-semibold">
-              {shortenAddress(address as string)}
-            </p>
+  return (
+    <>
+      <nav className={`h-[88px] bg-white border-gray-200 px-4 tablet:px-7 desktop:px-20`}>
+        <div className="flex flex-wrap items-center justify-between mx-auto py-4">
+          <div className="flex items-center gap-6">
+            <Link href="/" className="w-fit">
+              <Image
+                className="h-10 object-contain"
+                height={40}
+                src={brandingSvg}
+                alt="u2u-brand" />
+            </Link>
           </div>
-        </ConnectWalletButton>
-      </div>
-    </nav>
+
+          <ConnectWalletButton>
+            <div className="flex items-center gap-2">
+              <Image src={avatar} width={40} height={40} alt="user" />
+              <p className="text-secondary font-semibold">
+                {shortenAddress(address as string)}
+              </p>
+            </div>
+          </ConnectWalletButton>
+        </div>
+      </nav>
+    </>
   )
 }

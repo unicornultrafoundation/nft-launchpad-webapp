@@ -3,12 +3,14 @@ import Text from '@/components/Text'
 import { Project } from '@/types'
 import Icon from '@/components/Icon'
 import Stepper from '@/components/Stepper'
+import { useRouter } from 'next/navigation'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   project: Project
 }
 
 export default function ProjectCard({ project, ...rest }: Props) {
+  const router = useRouter()
   const activeStep = 1
 
   const steps = [
@@ -18,7 +20,10 @@ export default function ProjectCard({ project, ...rest }: Props) {
   ]
 
   return (
-    <div className="rounded-2xl border-[0.7px] border-gray-200" {...rest}>
+    <div
+      className="cursor-pointer rounded-2xl border-[0.7px] border-gray-200"
+      onClick={() => router.push(`/project/1`)}
+      {...rest}>
       <div className="p-2">
         <Image
           className="rounded-lg w-full h-auto max-h-[308px]"
