@@ -8,7 +8,7 @@ export default function ProjectPageBanner() {
     <div className="flex items-stretch gap-10 justify-between">
       <div className="flex-1">
         <Image
-          className="h-full w-auto rounded-2xl"
+          className="w-full max-w-[600px] h-auto rounded-2xl"
           width={512}
           height={512}
           src="https://fakeimg.pl/600/?text=Project"
