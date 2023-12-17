@@ -4,7 +4,7 @@ import ProjectMintSchedule from '@/components/ProjectPage/MintSchedule'
 
 export default function ProjectPage() {
   return (
-    <div className="p-4 tablet:p-7 desktop:p-20">
+    <div className="px-4 tablet:px-7 desktop:px-20">
       <div className="mb-20">
         <ProjectPageBanner />
       </div>

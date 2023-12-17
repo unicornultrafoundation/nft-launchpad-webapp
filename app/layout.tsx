@@ -25,7 +25,9 @@ export default function RootLayout({
     <body className={inter.className}>
     <Providers>
       <MainHeader />
-      {children}
+      <div className="py-20">
+        {children}
+      </div>
       <MainFooter />
     </Providers>
     </body>

@@ -20,7 +20,7 @@ export default function HomePageBanner() {
   }
 
   return (
-    <div className="w-full h-full desktop:py-[60px] mx-auto">
+    <div className="w-full h-full mx-auto">
       <div className="text-heading-md text-body-16 text-white hidden" />
       <Slider {...settings}>
         <ProjectSlide />
