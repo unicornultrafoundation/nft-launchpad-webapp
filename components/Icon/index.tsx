@@ -28,6 +28,11 @@ import CloseIcon from '@/components/Icon/Close'
 import RoundZeroIcon from '@/components/Icon/RoundZero'
 import CheckIcon from '@/components/Icon/Check'
 import AuctionIcon from '@/components/Icon/Auction'
+import PlusIcon from '@/components/Icon/Plus'
+import MinusIcon from '@/components/Icon/Minus'
+import TwitterIcon from '@/components/Icon/Twitter'
+import DiscordIcon from '@/components/Icon/Discord'
+import WebsiteIcon from '@/components/Icon/Website'
 
 type Color = keyof typeof defaultColors & keyof typeof colors
 
@@ -99,6 +104,16 @@ export default function Icon({ name, width, height, ...rest }: IconProps & {
         return <CheckIcon width={iconW} height={iconH} {...rest} />
       case 'auction':
         return <AuctionIcon width={iconW} height={iconH} {...rest} />
+      case 'plus':
+        return <PlusIcon width={iconW} height={iconH} {...rest} />
+      case 'minus':
+        return <MinusIcon width={iconW} height={iconH} {...rest} />
+      case 'twitter':
+        return <TwitterIcon width={iconW} height={iconH} {...rest} />
+      case 'discord':
+        return <DiscordIcon width={iconW} height={iconH} {...rest} />
+      case 'website':
+        return <WebsiteIcon width={iconW} height={iconH} {...rest} />
       default:
         return null
     }

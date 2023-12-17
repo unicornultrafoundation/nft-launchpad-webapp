@@ -22,7 +22,7 @@ export default function HomePageProjectTabs() {
   const tabs = [
     { label: 'Minting', value: 1, quantity: projects.length },
     { label: 'Upcoming', value: 2, quantity: projects.length },
-    { label: 'Minting', value: 3, quantity: projects.length }
+    { label: 'Ended', value: 3, quantity: projects.length }
   ]
 
   return (

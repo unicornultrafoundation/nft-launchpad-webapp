@@ -60,9 +60,9 @@ export const typography = {
     lineHeight: '48px',
     letterSpacing: '-1px'
   }],
-  'heading-sm': ['32px', {
-    lineHeight: '38px',
-    letterSpacing: '-0.5px'
+  'heading-sm': ['24px', {
+    lineHeight: '28px',
+    letterSpacing: '-1px'
   }],
   'heading-xs': ['24px', {
     lineHeight: '24px',
