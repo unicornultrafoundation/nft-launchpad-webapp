@@ -1,5 +1,6 @@
 import Icon from '@/components/Icon'
 import Button from '@/components/Button'
+import ConnectWalletButton from '@/components/ConnectWalletButton'
 
 export default function RoundContractInteractions() {
   return (
@@ -59,7 +60,7 @@ export default function RoundContractInteractions() {
         <div className="flex-1">
           <div className="flex items-center p-4 gap-4 bg-surface-medium rounded-lg w-fit mb-3">
             <Icon className="cursor-pointer text-secondary" name="minus" width={24} height={24} />
-            <p className="text-body-18 font-medium">01</p>
+            <p className="text-body-18 font-medium px-2">01</p>
             <Icon className="cursor-pointer text-secondary" name="plus" width={24} height={24} />
           </div>
 
@@ -69,9 +70,11 @@ export default function RoundContractInteractions() {
         </div>
 
         <div className="flex-1">
-          <Button scale="lg" className="w-full">
-            Connect Wallet
-          </Button>
+          <ConnectWalletButton scale="lg" className="w-full">
+            <Button scale="lg" className="w-full">
+              Mint now
+            </Button>
+          </ConnectWalletButton>
         </div>
 
       </div>
