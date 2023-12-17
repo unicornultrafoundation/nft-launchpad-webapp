@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { classNames } from '@/utils'
 import Icon from '@/components/Icon'
 
@@ -8,9 +8,10 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   header: React.ReactNode
   isOpen?: boolean
   onToggle?: () => void
+  defaultOpen?: boolean
 }
 
-export default function Collapsible({ header, children, isOpen, onToggle, className, ...rest }: Props) {
+export default function Collapsible({ header, children, isOpen, onToggle, className, defaultOpen, ...rest }: Props) {
   const [open, setOpen] = useState(false)
   const expanded = useMemo(() => isOpen ?? open, [isOpen, open])
 
@@ -18,6 +19,10 @@ export default function Collapsible({ header, children, isOpen, onToggle, classN
     if (onToggle) onToggle()
     else setOpen(!open)
   }
+
+  useEffect(() => {
+    if (defaultOpen) setOpen(true)
+  }, []);
 
   return (
     <div className={classNames(`w-full p-4`, className)} {...rest}>

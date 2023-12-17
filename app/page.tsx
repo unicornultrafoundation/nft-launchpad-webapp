@@ -1,5 +1,5 @@
-import HomePageBanner from '@/components/homepage/Banner'
-import HomePageProjects from '@/components/homepage/Projects'
+import HomePageBanner from '@/components/HomePage/Banner'
+import HomePageProjects from '@/components/HomePage/Projects'
 
 export default function Home() {
   return (

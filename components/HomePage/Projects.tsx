@@ -2,7 +2,7 @@
 
 import Tabs from '@/components/Tabs'
 import { useState } from 'react'
-import HomePageProjectList from './ProjectList'
+import HomePageProjectList from '@/components/HomePage/ProjectList'
 
 export default function HomePageProjectTabs() {
   const projects = [

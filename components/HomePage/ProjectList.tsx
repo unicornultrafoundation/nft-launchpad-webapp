@@ -1,4 +1,4 @@
-import ProjectCard from '@/components/homepage/ProjectCard'
+import ProjectCard from '@/components/HomePage/ProjectCard'
 import { Project } from '@/types'
 
 interface Props {

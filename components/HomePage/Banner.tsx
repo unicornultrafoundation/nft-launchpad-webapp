@@ -1,7 +1,7 @@
 'use client'
 
 import Slider from "react-slick";
-import ProjectSlide from '@/components/homepage/ProjectSlide'
+import ProjectSlide from '@/components/HomePage/ProjectSlide'
 import Icon from '@/components/Icon'
 
 export default function HomePageBanner() {
