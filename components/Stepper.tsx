@@ -54,7 +54,7 @@ export default function Stepper({ current = 0, steps }: StepsProps) {
             <>
               <Step active={isActive} step={item} key={item.value} />
               {index < steps.length - 1 && (
-                <div className={classNames("w-[137px] h-[2px]", isActive ? 'bg-success' : 'bg-blue-300')} />
+                <div className={classNames("w-[100px] h-[2px]", isActive ? 'bg-success' : 'bg-blue-300')} />
               )}
             </>
           )
