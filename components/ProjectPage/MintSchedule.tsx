@@ -2,39 +2,27 @@ import Collapsible from '@/components/Collapsible'
 import { classNames } from '@/utils'
 import Icon from '@/components/Icon'
 import { Round } from '@/types'
+import { useMemo } from 'react'
 
 export default function ProjectMintSchedule({ rounds }: { rounds: Round[] }) {
-  const _rounds = [
-    {
-      name: 'Round zero',
-      status: 'ended',
-      start: '27/08/2023, 09:01 PM',
-      end: '18/08/2024, 09:00 PM',
-      price: 300,
-      total: 100,
-      maxMint: 1
-    },
-    {
-      name: 'Whitelist round',
-      status: 'live',
-      start: '27/08/2023, 09:01 PM',
-      end: '18/08/2024, 09:00 PM',
-      price: 300,
-      total: 100,
-      maxMint: 1
-    },
-    {
-      name: 'Whitelist round',
-      status: '',
-      start: '27/08/2023, 09:01 PM',
-      end: '18/08/2024, 09:00 PM',
-      price: 300,
-      total: 100,
-      maxMint: 1
-    }
-  ]
+  const isProjectEnded = useMemo(() => {
+    if (rounds.length === 0) return true
+    const lastRound = rounds[rounds.length - 1]
+    const endTime = new Date(lastRound.end).getTime()
+    return Date.now() > endTime
+  }, [rounds])
 
-  const activeRoundIndex = _rounds.findIndex(round => round.status === 'live')
+  const schedule = useMemo(() => {
+    return rounds.map(round => {
+      const isMinting = new Date(round.start).getTime() < Date.now() && new Date(round.end).getTime() > Date.now()
+      const isEnded = new Date(round.end).getTime() < Date.now()
+      return { ...round, isMinting, isEnded }
+    })
+  }, [rounds])
+
+  const activeRoundIndex = useMemo(() => {
+    return schedule.findIndex(round => round.isMinting)
+  }, [schedule])
 
   return (
     <div className="w-full">
@@ -44,9 +32,10 @@ export default function ProjectMintSchedule({ rounds }: { rounds: Round[] }) {
 
       <div className="flex flex-col">
         {
-          _rounds.map((round, index) => {
-            const isCompleted = index < activeRoundIndex
+          schedule.map((round, index) => {
+            const isCompleted = isProjectEnded || index < activeRoundIndex
             const isActive = index === activeRoundIndex
+
             return (
               <div className="flex items-stretch gap-2 w-full" key={round.name}>
                 <div className="flex flex-col items-center">
@@ -71,23 +60,15 @@ export default function ProjectMintSchedule({ rounds }: { rounds: Round[] }) {
                   }
                 </div>
 
-
                 <Collapsible
-                  defaultOpen={round.status === 'live'}
+                  defaultOpen={isActive}
                   className="flex-1 !px-0 !py-1"
                   header={<p className="text-body-16 font-medium">{round.name}</p>}>
                   <div className="rounded-2xl bg-surface-soft p-4 my-4 flex flex-col gap-2">
                     <div className="flex items-center gap-1">
                       <p className="text-body-16 font-medium">Minting</p>
-                      {!!round.status &&
-                        <p className={classNames(
-                          'text-body-16',
-                          round.status === 'live' && 'text-success',
-                          round.status === 'ended' && 'text-error'
-                        )}>
-                          {round.status}
-                        </p>
-                      }
+                      {round.isMinting && <p className="text-body-16 text-success">Live</p>}
+                      {round.isEnded && <p className="text-body-16 text-error">Ended</p>}
                     </div>
 
                     <p className="text-body-12 text-secondary">Start {round.start}</p>
@@ -101,7 +82,7 @@ export default function ProjectMintSchedule({ rounds }: { rounds: Round[] }) {
                       </p>
                       <Icon name="u2u-logo" width={16} height={16} />
                       <p className="text-body-12 font-medium">
-                        {round.price} U2U
+                        {300} U2U
                       </p>
                     </div>
 
@@ -110,7 +91,7 @@ export default function ProjectMintSchedule({ rounds }: { rounds: Round[] }) {
                         Total mintable:
                       </p>
                       <p className="text-body-12 font-medium">
-                        {round.total}
+                        {300}
                       </p>
                     </div>
 
@@ -119,7 +100,7 @@ export default function ProjectMintSchedule({ rounds }: { rounds: Round[] }) {
                         Max mint:
                       </p>
                       <p className="text-body-12 font-medium">
-                        {round.maxMint}
+                        {3}
                       </p>
                     </div>
 

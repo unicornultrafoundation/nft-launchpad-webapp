@@ -7,6 +7,7 @@ import { Connector, useAccount, useConnect, useNetwork, useSwitchNetwork } from 
 import Icon from '@/components/Icon'
 import { toast } from 'react-toastify'
 import { CHAIN_ID } from '@/config/constants'
+import { classNames } from '@/utils'
 
 const customModalStyles = {
   content: {
@@ -23,7 +24,7 @@ const customModalStyles = {
   }
 }
 
-export default function ConnectWalletButton({ children, ...rest }: ButtonProps) {
+export default function ConnectWalletButton({ children, className, ...rest }: ButtonProps) {
   const [modalIsOpen, setIsOpen] = useState(false)
   const { isConnected } = useAccount()
   const { connect, connectors, pendingConnector, isLoading } = useConnect()
@@ -67,7 +68,7 @@ export default function ConnectWalletButton({ children, ...rest }: ButtonProps) 
       <div className={isConnected ? '' : 'hidden'}>
         {children}
       </div>
-      <Button className={isConnected ? 'hidden' : ''} {...rest} onClick={() => setIsOpen(true)}>
+      <Button className={classNames(className, isConnected ? 'hidden' : '')} {...rest} onClick={() => setIsOpen(true)}>
         Connect wallet
       </Button>
       <Modal

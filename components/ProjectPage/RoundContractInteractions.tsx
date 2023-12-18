@@ -1,8 +1,9 @@
 import Icon from '@/components/Icon'
 import Button from '@/components/Button'
 import ConnectWalletButton from '@/components/ConnectWalletButton'
+import { Round } from '@/types'
 
-export default function RoundContractInteractions() {
+export default function RoundContractInteractions({ round }: { round: Round }) {
   return (
     <div className="w-full rounded-lg bg-surface-soft flex flex-col gap-4 p-4">
       <div className="flex items-start justify-between">

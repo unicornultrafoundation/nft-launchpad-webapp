@@ -8,8 +8,8 @@ interface Props {
 export default function HomePageProjectList({ projects }: Props) {
   if (!projects || !projects.length) {
     return (
-      <div>
-        Nothing to show
+      <div className="w-full h-56 flex justify-center items-center p-7 rounded-2xl border border-disabled border-dashed mt-7">
+        <p className="text-secondary font-semibold text-body-18">Nothing to show</p>
       </div>
     )
   }

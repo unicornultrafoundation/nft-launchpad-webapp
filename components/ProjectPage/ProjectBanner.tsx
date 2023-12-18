@@ -3,8 +3,15 @@ import Icon from '@/components/Icon'
 import RoundContractInteractions from '@/components/ProjectPage/RoundContractInteractions'
 import Link from 'next/link'
 import { Project } from '@/types'
+import { useMemo } from 'react'
 
 export default function ProjectPageBanner({ project }: { project: Project }) {
+  const activeRound = useMemo(() => {
+    return project.rounds.find(round => {
+      return Date.now() >= new Date(round.start).getTime() && Date.now() <= new Date(round.end).getTime()
+    }) || project.rounds[project.rounds.length - 1]
+  }, [project])
+
   return (
     <div className="flex items-stretch gap-10 justify-between">
       <div className="flex-1">
@@ -68,7 +75,7 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
           </p>
         </div>
 
-        <RoundContractInteractions />
+        <RoundContractInteractions round={activeRound} />
       </div>
     </div>
   )
