@@ -29,7 +29,7 @@ export default function MainHeader() {
             <div className="flex items-center gap-2">
               <Image src={avatar} width={40} height={40} alt="user" />
               <p className="text-secondary font-semibold">
-                {shortenAddress(address as string)}
+                {shortenAddress(address || '')}
               </p>
             </div>
           </ConnectWalletButton>

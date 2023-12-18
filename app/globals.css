@@ -11,3 +11,8 @@ body {
   font-family: 'SFPro', 'system-ui', 'Arial';
   background-color: #FFF;
 }
+
+.Toastify__toast {
+  width: 100%;
+  max-width: 480px;
+}

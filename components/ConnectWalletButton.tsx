@@ -2,9 +2,11 @@
 
 import Button, { ButtonProps } from '@/components/Button'
 import Modal from 'react-modal'
-import { useState } from 'react'
-import { Connector, useAccount, useConnect } from 'wagmi'
+import { useEffect, useState } from 'react'
+import { Connector, useAccount, useConnect, useNetwork, useSwitchNetwork } from 'wagmi'
 import Icon from '@/components/Icon'
+import { toast } from 'react-toastify'
+import { CHAIN_ID } from '@/config/constants'
 
 const customModalStyles = {
   content: {
@@ -25,6 +27,8 @@ export default function ConnectWalletButton({ children, ...rest }: ButtonProps) 
   const [modalIsOpen, setIsOpen] = useState(false)
   const { isConnected } = useAccount()
   const { connect, connectors, pendingConnector, isLoading } = useConnect()
+  const { chain } = useNetwork()
+  const { switchNetwork } = useSwitchNetwork()
 
   const handleConnect = async (connector: Connector) => {
     try {
@@ -38,13 +42,32 @@ export default function ConnectWalletButton({ children, ...rest }: ButtonProps) 
     }
   }
 
-  if (isConnected) {
-    return children
-  }
+  useEffect(() => {
+    if (!!chain?.id && chain?.id !== Number(CHAIN_ID)) {
+      toast.warning(<p className="whitespace-nowrap">Wrong network detected</p>, {
+        toastId: 'changeNetwork',
+        position: 'bottom-center',
+        closeOnClick: false,
+        autoClose: false,
+        closeButton: ({ closeToast }) => (
+          <div
+            className="cursor-pointer whitespace-nowrap flex justify-center items-center text-body-14 font-semibold text-info mr-2"
+            onClick={(e) => {
+              switchNetwork?.(Number(CHAIN_ID))
+              closeToast(e)
+            }}
+          >Change now</div>
+        )
+      })
+    }
+  }, [chain]);
 
   return (
     <>
-      <Button {...rest} onClick={() => setIsOpen(true)}>
+      <div className={isConnected ? '' : 'hidden'}>
+        {children}
+      </div>
+      <Button className={isConnected ? 'hidden' : ''} {...rest} onClick={() => setIsOpen(true)}>
         Connect wallet
       </Button>
       <Modal
@@ -79,6 +102,5 @@ export default function ConnectWalletButton({ children, ...rest }: ButtonProps) 
         </div>
       </Modal>
     </>
-
   )
 }
