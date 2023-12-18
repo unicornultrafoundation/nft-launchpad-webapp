@@ -26,12 +26,14 @@ export default function MainHeader() {
           </div>
 
           <ConnectWalletButton>
-            <div className="flex items-center gap-2">
-              <Image src={avatar} width={40} height={40} alt="user" />
-              <p className="text-secondary font-semibold">
-                {shortenAddress(address || '')}
-              </p>
-            </div>
+            {!!address && (
+              <div className="flex items-center gap-2">
+                <Image src={avatar} width={40} height={40} alt="user" />
+                <p className="text-secondary font-semibold">
+                  {shortenAddress(address)}
+                </p>
+              </div>
+            )}
           </ConnectWalletButton>
         </div>
       </nav>

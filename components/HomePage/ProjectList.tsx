@@ -2,10 +2,17 @@ import ProjectCard from '@/components/HomePage/ProjectCard'
 import { Project } from '@/types'
 
 interface Props {
-  projects: Project[]
+  projects?: Project[]
 }
 
 export default function HomePageProjectList({ projects }: Props) {
+  if (!projects || !projects.length) {
+    return (
+      <div>
+        Nothing to show
+      </div>
+    )
+  }
 
   return (
     <div className="grid tablet:grid-cols-2 grid-cols-1 tablet:gap-8 gap-6 py-6">

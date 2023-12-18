@@ -6,7 +6,7 @@ interface Props {
   tabs: {
     label: string
     value: any
-    quantity?: number
+    quantity?: number | string
   }[]
   onChangeTab: (tab: any) => void
 }
@@ -23,7 +23,7 @@ export default function Tabs({ current, tabs, onChangeTab }: Props) {
           onClick={() => onChangeTab(tab.value)}
           key={tab.value}>
           <Text>{tab.label}</Text>
-          {!!tab.quantity && (
+          {(tab.quantity !== undefined && tab.quantity !== null) && (
             <div
               className="rounded-full bg-surface-soft w-[27px] h-[20px] flex justify-center items-center"
               style={{ mixBlendMode: 'multiply' }}>

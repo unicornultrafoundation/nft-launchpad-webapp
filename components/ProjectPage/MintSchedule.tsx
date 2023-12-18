@@ -1,9 +1,10 @@
 import Collapsible from '@/components/Collapsible'
 import { classNames } from '@/utils'
 import Icon from '@/components/Icon'
+import { Round } from '@/types'
 
-export default function ProjectMintSchedule() {
-  const rounds = [
+export default function ProjectMintSchedule({ rounds }: { rounds: Round[] }) {
+  const _rounds = [
     {
       name: 'Round zero',
       status: 'ended',
@@ -33,7 +34,7 @@ export default function ProjectMintSchedule() {
     }
   ]
 
-  const activeRoundIndex = rounds.findIndex(round => round.status === 'live')
+  const activeRoundIndex = _rounds.findIndex(round => round.status === 'live')
 
   return (
     <div className="w-full">
@@ -43,7 +44,7 @@ export default function ProjectMintSchedule() {
 
       <div className="flex flex-col">
         {
-          rounds.map((round, index) => {
+          _rounds.map((round, index) => {
             const isCompleted = index < activeRoundIndex
             const isActive = index === activeRoundIndex
             return (
@@ -55,7 +56,7 @@ export default function ProjectMintSchedule() {
                   )}>
                     <div className={classNames(
                       'w-6 h-6 rounded-full flex items-center justify-center',
-                      isCompleted ? 'bg-success' :  isActive ? 'bg-white' : 'bg-surface-medium'
+                      isCompleted ? 'bg-success' : isActive ? 'bg-white' : 'bg-surface-medium'
                     )}>
                       {isCompleted && (
                         <Icon color="white" name="check" width={16} height={16} />

@@ -114,6 +114,8 @@ export default function Icon({ name, width, height, ...rest }: IconProps & {
         return <DiscordIcon width={iconW} height={iconH} {...rest} />
       case 'website':
         return <WebsiteIcon width={iconW} height={iconH} {...rest} />
+      case 'telegram':
+        return <WebsiteIcon width={iconW} height={iconH} {...rest} />
       default:
         return null
     }
