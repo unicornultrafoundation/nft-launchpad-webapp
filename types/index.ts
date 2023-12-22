@@ -1,4 +1,14 @@
 import { Address } from 'wagmi'
+import { BigNumberish } from 'ethers'
+
+export enum RoundType {
+  U2UMintRoundFCFS = 'U2UMintRoundFCFS',
+  U2UMintRoundWhitelist = 'U2UMintRoundWhitelist',
+  U2UMintRoundZero = 'U2UMintRoundZero',
+  U2UPremintRoundFCFS = 'U2UPremintRoundFCFS',
+  U2UPremintRoundWhitelist = 'U2UPremintRoundWhitelist',
+  U2UPremintRoundZero = 'U2UPremintRoundZero'
+}
 
 export interface Round {
   id: number,
@@ -9,11 +19,16 @@ export interface Round {
   address: Address,
   start: string,
   end: string,
+  type: RoundType
+  price: BigNumberish
+  maxPerWallet: number
+  totalNftt: number
+  claimableStart: string
 }
 
 export interface Project {
   id: string,
-  onChainId: number,
+  idOnchain: number,
   name: string,
   banner: string,
   logo: string
@@ -29,4 +44,7 @@ export interface Project {
   isActivated: boolean,
   collection: Address,
   rounds: Round[]
+  details: { key: string, content: string }[]
 }
+
+export type RoundStatus = 'MINTING' | 'ENDED' | 'UPCOMING'

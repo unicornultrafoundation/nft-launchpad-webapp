@@ -1,27 +1,22 @@
 import Collapsible from '@/components/Collapsible'
-import { classNames } from '@/utils'
+import { classNames, formatDisplayedBalance } from '@/utils'
 import Icon from '@/components/Icon'
 import { Round } from '@/types'
 import { useMemo } from 'react'
+import { formatEther } from 'ethers'
+import { useRoundsWithStatus } from '@/hooks/useRoundStatus'
 
 export default function ProjectMintSchedule({ rounds }: { rounds: Round[] }) {
-  const isProjectEnded = useMemo(() => {
-    if (rounds.length === 0) return true
-    const lastRound = rounds[rounds.length - 1]
-    const endTime = new Date(lastRound.end).getTime()
-    return Date.now() > endTime
-  }, [rounds])
-
-  const schedule = useMemo(() => {
-    return rounds.map(round => {
-      const isMinting = new Date(round.start).getTime() < Date.now() && new Date(round.end).getTime() > Date.now()
-      const isEnded = new Date(round.end).getTime() < Date.now()
-      return { ...round, isMinting, isEnded }
-    })
-  }, [rounds])
+  const schedule = useRoundsWithStatus(rounds)
 
   const activeRoundIndex = useMemo(() => {
-    return schedule.findIndex(round => round.isMinting)
+    const mintingRoundIndex = schedule.findIndex(round => round.status === 'MINTING')
+    if (mintingRoundIndex > -1) return mintingRoundIndex
+
+    const lastEndedRoundIndex = schedule.reverse().findIndex(round => round.status === 'ENDED')
+    if (lastEndedRoundIndex > -1) return lastEndedRoundIndex + 1 < schedule.length ? lastEndedRoundIndex + 1 : lastEndedRoundIndex
+
+    return 0
   }, [schedule])
 
   return (
@@ -33,7 +28,7 @@ export default function ProjectMintSchedule({ rounds }: { rounds: Round[] }) {
       <div className="flex flex-col">
         {
           schedule.map((round, index) => {
-            const isCompleted = isProjectEnded || index < activeRoundIndex
+            const isCompleted = index < activeRoundIndex
             const isActive = index === activeRoundIndex
 
             return (
@@ -41,11 +36,15 @@ export default function ProjectMintSchedule({ rounds }: { rounds: Round[] }) {
                 <div className="flex flex-col items-center">
                   <div className={classNames(
                     'w-8 h-8 rounded-full flex items-center justify-center',
-                    isCompleted ? 'bg-success/50' : isActive ? 'bg-success/30' : 'bg-surface-soft'
+                    round.status === 'ENDED' && 'bg-success/50',
+                    round.status === 'MINTING' && 'bg-success/50',
+                    round.status === 'UPCOMING' && (isActive ? 'bg-warning/50' : 'bg-surface-medium')
                   )}>
                     <div className={classNames(
                       'w-6 h-6 rounded-full flex items-center justify-center',
-                      isCompleted ? 'bg-success' : isActive ? 'bg-white' : 'bg-surface-medium'
+                      round.status === 'ENDED' && 'bg-success',
+                      round.status === 'MINTING' && 'bg-white',
+                      round.status === 'UPCOMING' && (isActive ? 'bg-white' : 'bg-surface-soft')
                     )}>
                       {isCompleted && (
                         <Icon color="white" name="check" width={16} height={16} />
@@ -67,12 +66,13 @@ export default function ProjectMintSchedule({ rounds }: { rounds: Round[] }) {
                   <div className="rounded-2xl bg-surface-soft p-4 my-4 flex flex-col gap-2">
                     <div className="flex items-center gap-1">
                       <p className="text-body-16 font-medium">Minting</p>
-                      {round.isMinting && <p className="text-body-16 text-success">Live</p>}
-                      {round.isEnded && <p className="text-body-16 text-error">Ended</p>}
+                      {round.status === 'UPCOMING' && <p className="text-body-16 text-warning">Upcoming</p>}
+                      {round.status === 'MINTING' && <p className="text-body-16 text-success">Live</p>}
+                      {round.status === 'ENDED' && <p className="text-body-16 text-error">Ended</p>}
                     </div>
 
-                    <p className="text-body-12 text-secondary">Start {round.start}</p>
-                    <p className="text-body-12 text-secondary">Start {round.end}</p>
+                    <p className="text-body-12 text-secondary">Start: {round.start}</p>
+                    <p className="text-body-12 text-secondary">Start: {round.end}</p>
 
                     <div className="w-full h-[1px] bg-gray-200" />
 
@@ -82,7 +82,7 @@ export default function ProjectMintSchedule({ rounds }: { rounds: Round[] }) {
                       </p>
                       <Icon name="u2u-logo" width={16} height={16} />
                       <p className="text-body-12 font-medium">
-                        {300} U2U
+                        {formatDisplayedBalance(formatEther(round.price))} U2U
                       </p>
                     </div>
 
@@ -91,7 +91,7 @@ export default function ProjectMintSchedule({ rounds }: { rounds: Round[] }) {
                         Total mintable:
                       </p>
                       <p className="text-body-12 font-medium">
-                        {300}
+                        {round.totalNftt === 0 ? 'Open edition' : round.totalNftt}
                       </p>
                     </div>
 
@@ -100,7 +100,7 @@ export default function ProjectMintSchedule({ rounds }: { rounds: Round[] }) {
                         Max mint:
                       </p>
                       <p className="text-body-12 font-medium">
-                        {3}
+                        {round.maxPerWallet === 0 ? 'Open edition' : round.maxPerWallet}
                       </p>
                     </div>
 

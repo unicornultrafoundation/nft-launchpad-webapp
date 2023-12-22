@@ -9,7 +9,7 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
   const activeRound = useMemo(() => {
     return project.rounds.find(round => {
       return Date.now() >= new Date(round.start).getTime() && Date.now() <= new Date(round.end).getTime()
-    }) || project.rounds[project.rounds.length - 1]
+    }) || project.rounds[0]
   }, [project])
 
   return (

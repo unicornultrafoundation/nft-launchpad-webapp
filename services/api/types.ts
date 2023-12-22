@@ -1,10 +1,10 @@
 import { Address } from 'wagmi'
 import { BigNumberish } from 'ethers'
-import { Project } from '@/types'
+import { Project, RoundStatus } from '@/types'
 
 export namespace APIParams {
   export interface FetchProjects {
-    mode: 'MINTING' | 'ENDED' | 'COMING'
+    mode: RoundStatus
   }
 }
 

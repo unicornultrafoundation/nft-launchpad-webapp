@@ -1,6 +1,6 @@
 import { colors } from '@/config/theme'
 import defaultColors from 'tailwindcss/colors'
-import { useMemo } from 'react'
+import { ReactHTML, useMemo } from 'react'
 
 import U2ULogo from './U2ULogo'
 import BurgerIcon from './Burger'
@@ -33,10 +33,11 @@ import MinusIcon from '@/components/Icon/Minus'
 import TwitterIcon from '@/components/Icon/Twitter'
 import DiscordIcon from '@/components/Icon/Discord'
 import WebsiteIcon from '@/components/Icon/Website'
+import TelegramIcon from '@/components/Icon/Telegram'
 
 type Color = keyof typeof defaultColors & keyof typeof colors
 
-export interface IconProps {
+export interface IconProps extends React.HTMLAttributes<SVGElement>{
   width?: number;
   height?: number;
   className?: string
@@ -115,7 +116,7 @@ export default function Icon({ name, width, height, ...rest }: IconProps & {
       case 'website':
         return <WebsiteIcon width={iconW} height={iconH} {...rest} />
       case 'telegram':
-        return <WebsiteIcon width={iconW} height={iconH} {...rest} />
+        return <TelegramIcon width={iconW} height={iconH} {...rest} />
       default:
         return null
     }

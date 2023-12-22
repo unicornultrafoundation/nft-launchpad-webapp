@@ -22,7 +22,7 @@ export default function ProjectCard({ project, ...rest }: Props) {
   return (
     <div
       className="cursor-pointer rounded-2xl border-[0.7px] border-gray-200"
-      onClick={() => router.push(`/project/1`)}
+      onClick={() => router.push(`/project/${project.id}`)}
       {...rest}>
       <div className="p-2">
         <Image

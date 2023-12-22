@@ -16,7 +16,7 @@ export default function HomePageProjectTabs() {
 
   const { data: comingProjects } = useSWR(
     'comingProjects',
-    () => api.fetchProjects({ mode: 'COMING' }),
+    () => api.fetchProjects({ mode: 'UPCOMING' }),
     { revalidateOnFocus: false }
   )
 
