@@ -2,22 +2,11 @@ import Collapsible from '@/components/Collapsible'
 import { classNames, formatDisplayedBalance } from '@/utils'
 import Icon from '@/components/Icon'
 import { Round } from '@/types'
-import { useMemo } from 'react'
 import { formatEther } from 'ethers'
 import { useRoundsWithStatus } from '@/hooks/useRoundStatus'
 
 export default function ProjectMintSchedule({ rounds }: { rounds: Round[] }) {
-  const schedule = useRoundsWithStatus(rounds)
-
-  const activeRoundIndex = useMemo(() => {
-    const mintingRoundIndex = schedule.findIndex(round => round.status === 'MINTING')
-    if (mintingRoundIndex > -1) return mintingRoundIndex
-
-    const lastEndedRoundIndex = schedule.reverse().findIndex(round => round.status === 'ENDED')
-    if (lastEndedRoundIndex > -1) return lastEndedRoundIndex + 1 < schedule.length ? lastEndedRoundIndex + 1 : lastEndedRoundIndex
-
-    return 0
-  }, [schedule])
+  const { roundsWithStatus: schedule, activeRoundIndex } = useRoundsWithStatus(rounds)
 
   return (
     <div className="w-full">

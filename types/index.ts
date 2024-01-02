@@ -1,14 +1,17 @@
 import { Address } from 'wagmi'
 import { BigNumberish } from 'ethers'
 
-export enum RoundType {
-  U2UMintRoundFCFS = 'U2UMintRoundFCFS',
-  U2UMintRoundWhitelist = 'U2UMintRoundWhitelist',
-  U2UMintRoundZero = 'U2UMintRoundZero',
-  U2UPremintRoundFCFS = 'U2UPremintRoundFCFS',
-  U2UPremintRoundWhitelist = 'U2UPremintRoundWhitelist',
-  U2UPremintRoundZero = 'U2UPremintRoundZero'
-}
+export type RoundType =
+  'U2UMintRoundFCFS'
+  | 'U2UMintRoundWhitelist'
+  | 'U2UMintRoundZero'
+  | 'U2UPremintRoundFCFS'
+  | 'U2UPremintRoundWhitelist'
+  | 'U2UPremintRoundZero'
+
+export type RoundStatus = 'MINTING' | 'ENDED' | 'UPCOMING'
+
+export type AssetType = 'ERC721' | 'ERC1155'
 
 export interface Round {
   id: number,
@@ -24,6 +27,46 @@ export interface Round {
   maxPerWallet: number
   totalNftt: number
   claimableStart: string
+}
+
+export interface User {
+  id: string
+  email: string
+  avatar?: string | null
+  username: string | null
+  signature: Address
+  signedMessage: string
+  signer: Address
+  publicKey: string
+  signDate: string
+  acceptedTerms: boolean
+  createdAt: string
+  updatedAt?: string | null
+  bio?: string | null
+  coverImage?: string | null
+}
+
+export interface Collection {
+  id: string
+  txCreationHash: string
+  name: string | null
+  symbol: string
+  address: Address
+  isU2U: boolean
+  description?: string | null
+  categoryId: number | null
+  createdAt: string
+  updatedAt: string
+  metadata: Record<string, any> | string
+  shortUrl: string | null
+  type: AssetType
+  creators: { userId: string, user: User }[]
+  coverImage: string | null
+  avatar: string | null
+  volumn: string
+  totalOwner: number
+  totalNft: number
+  floorPrice: string
 }
 
 export interface Project {
@@ -42,9 +85,7 @@ export interface Project {
   discord: string,
   shortLink: string,
   isActivated: boolean,
-  collection: Address,
+  collection: Collection,
   rounds: Round[]
   details: { key: string, content: string }[]
 }
-
-export type RoundStatus = 'MINTING' | 'ENDED' | 'UPCOMING'

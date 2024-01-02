@@ -4,24 +4,48 @@ import Icon from '@/components/Icon'
 import Stepper from '@/components/Stepper'
 import Button from '@/components/Button'
 import Link from 'next/link'
+import { Project, RoundType } from '@/types'
+import { useRoundsWithStatus } from '@/hooks/useRoundStatus'
+import { useMemo } from 'react'
+import { formatDisplayedBalance } from '@/utils'
+import { formatEther } from 'ethers'
 
-export default function ProjectSlide() {
-  const activeStep = 1
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
+  project: Project
+}
 
-  const steps = [
-    { label: 'Round Zero', value: 1 },
-    { label: 'Whitelist', icon: "check", value: 2 },
-    { label: 'Public', icon: "auction", value: 3 },
-  ]
+export default function ProjectSlide({ project, ...rest }: Props) {
+  const { activeRound, activeRoundIndex, roundsWithStatus } = useRoundsWithStatus(project.rounds)
+
+  const getIconName = (type: RoundType) => {
+    switch (type) {
+      case 'U2UMintRoundZero':
+      case 'U2UPremintRoundZero':
+        return 'round-zero'
+      case 'U2UMintRoundWhitelist':
+      case 'U2UPremintRoundWhitelist':
+        return 'check'
+      case 'U2UMintRoundFCFS':
+      case 'U2UPremintRoundFCFS':
+      default:
+        return 'auction'
+    }
+  }
+
+  const steps = useMemo(() => {
+    return roundsWithStatus.map((round, index) => {
+      return { label: round.name, value: index, icon: round.status === 'ENDED' ? 'check' : getIconName(round.type) }
+    })
+  }, [roundsWithStatus])
 
   return (
-    <div>
+    <div {...rest}>
       <div className="flex justify-center desktop:gap-8 mb-10">
         {/** Project Image **/}
         <Image
           width={384}
           height={384}
-          src="https://fakeimg.pl/600/?text=Project"
+          src={project.banner}
           className="w-96 h-96 rounded-2xl"
           alt="" />
 
@@ -29,14 +53,14 @@ export default function ProjectSlide() {
           {/** Project descriptions **/}
           <div className="flex flex-col gap-4">
             <Text className="font-semibold" variant="heading-lg">
-              Projects: Name Projects
+              Projects: {project.name}
             </Text>
             <div className="flex gap-3 items-center">
               <Icon name="u2u-logo" width={24} height={24} />
               <div className="h-full bg-gray-500 w-[1px]" />
               <Text variant="body-16">
                 <span className="text-secondary">Items:</span>
-                {" "}Open Edition
+                {" "}{activeRound?.totalNftt === 0 ? 'Open Edition' : activeRound?.totalNftt || 0}
               </Text>
             </div>
 
@@ -44,11 +68,13 @@ export default function ProjectSlide() {
             <div className="flex items-start gap-6">
               <div>
                 <Text className="text-secondary" variant="body-16">
-                  Public Round Price
+                  Round Price
                 </Text>
                 <div className="flex items-center gap-2">
                   <Icon name="u2u-logo" width={24} height={24} />
-                  <Text className="font-semibold" variant="heading-md">300</Text>
+                  <Text className="font-semibold" variant="heading-md">
+                    {formatDisplayedBalance(formatEther(activeRound?.price || 0))}
+                  </Text>
                   <Text className="font-semibold text-tertiary" variant="body-16">U2U</Text>
                 </div>
               </div>
@@ -57,21 +83,22 @@ export default function ProjectSlide() {
                 <Text className="text-secondary" variant="body-16">
                   Items
                 </Text>
-                <Text className="font-semibold" variant="heading-md">Open Edition</Text>
+                <Text className="font-semibold" variant="heading-md">
+                  {activeRound?.totalNftt === 0 ? 'Open Edition' : activeRound?.totalNftt || 0}
+                </Text>
               </div>
             </div>
           </div>
 
           {/** Project Rounds **/}
-          <Stepper current={activeStep} steps={steps} />
+          <Stepper current={activeRoundIndex} steps={steps} />
 
-          <Link href={`/project/1`}>
+          <Link href={`/project/${project.id}`}>
             <Button className="w-[300px]">
               Details
             </Button>
           </Link>
         </div>
-
       </div>
     </div>
   )

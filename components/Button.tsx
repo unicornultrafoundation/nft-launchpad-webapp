@@ -2,6 +2,8 @@
 
 import { useMemo } from 'react'
 import { classNames } from '@/utils'
+import { ClipLoader } from 'react-spinners'
+import { colors } from '@/config/theme'
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   scale?: 'sm' | 'md' | 'lg'
@@ -81,6 +83,7 @@ export default function Button({
         {
           loading ? (
             <>
+              <ClipLoader color={colors.info} />
               {loadingText || 'Loading...'}
             </>
 

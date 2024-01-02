@@ -6,6 +6,8 @@ import ProjectMintSchedule from '@/components/ProjectPage/MintSchedule'
 import useSWR from 'swr'
 import { useParams } from 'next/navigation'
 import { useLaunchpadApi } from '@/hooks/useLaunchpadApi'
+import { ClipLoader } from 'react-spinners'
+import { colors } from '@/config/theme'
 
 export default function ProjectPage() {
   const { id } = useParams()
@@ -15,6 +17,14 @@ export default function ProjectPage() {
     (id: string) => api.fetchProjectById(id),
     { revalidateOnFocus: false }
   )
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen w-full flex justify-center items-center">
+        <ClipLoader color={colors.info} />
+      </div>
+    )
+  }
 
   if (!data) {
     return (

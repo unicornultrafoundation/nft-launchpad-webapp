@@ -19,8 +19,27 @@ export const useRoundStatus = (round: Round): RoundStatus => {
   return useMemo(() => getRoundStatus(round), [round])
 }
 
-export const useRoundsWithStatus = (rounds: Round[]): (Round & { status: RoundStatus })[] => {
-  return useMemo(() => {
+export const useRoundsWithStatus = (rounds: Round[]) => {
+  const roundsWithStatus: (Round & { status: RoundStatus })[] = useMemo(() => {
     return rounds.map(round => ({ ...round, status: getRoundStatus(round) }))
   }, [rounds])
+
+  const activeRoundIndex = useMemo(() => {
+    const mintingRoundIndex = roundsWithStatus.findIndex(round => round.status === 'MINTING')
+    if (mintingRoundIndex > -1) return mintingRoundIndex
+
+    const lastEndedRoundIndex = roundsWithStatus.length - roundsWithStatus.reverse().findIndex(round => round.status === 'ENDED')
+    if (lastEndedRoundIndex > -1) {
+      return lastEndedRoundIndex + 1 < roundsWithStatus.length ? lastEndedRoundIndex + 1 : lastEndedRoundIndex
+    }
+    return 0
+  }, [roundsWithStatus])
+
+  const activeRound = useMemo(() => roundsWithStatus[activeRoundIndex], [roundsWithStatus, activeRoundIndex])
+
+  return {
+    roundsWithStatus,
+    activeRoundIndex,
+    activeRound
+  }
 }

@@ -1,19 +1,26 @@
 import Icon from '@/components/Icon'
 import Button from '@/components/Button'
 import ConnectWalletButton from '@/components/ConnectWalletButton'
-import { Round } from '@/types'
-import { formatEther, parseEther } from 'ethers'
+import { Collection, Round } from '@/types'
+import { formatEther } from 'ethers'
 import { formatDisplayedBalance } from '@/utils'
 import { useRoundStatus } from '@/hooks/useRoundStatus'
 import { useMemo, useState } from 'react'
 import { useAccount, useBalance } from 'wagmi'
 import { toast } from 'react-toastify'
+import { useWriteRoundContract } from '@/hooks/useRoundContract'
 
-export default function RoundContractInteractions({ round }: { round: Round }) {
+interface Props {
+  collection: Collection
+  round: Round,
+}
+
+export default function RoundContractInteractions({ round, collection }: Props) {
   const { address } = useAccount()
   const { data } = useBalance({ address, watch: true, enabled: !!address })
   const [amount, setAmount] = useState(1)
   const status = useRoundStatus(round)
+
   const estimatedCost = useMemo(() => {
     const totalCostBN = BigInt(round.price) * BigInt(amount)
     const totalCost = formatEther(totalCostBN)
@@ -40,6 +47,21 @@ export default function RoundContractInteractions({ round }: { round: Round }) {
     }
 
     setAmount(value)
+  }
+
+  const { onBuyNFT } = useWriteRoundContract(round, collection)
+  const [loading, setLoading] = useState(false)
+  const handleBuyNFT = async () => {
+    try {
+      setLoading(true)
+      const { waitForTransaction } = await onBuyNFT()
+      await waitForTransaction()
+      toast.success('Your item has been successfully purchased!')
+    } catch (e: any) {
+      toast.error(`Error report: ${e?.message || e}`)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -164,7 +186,7 @@ export default function RoundContractInteractions({ round }: { round: Round }) {
 
         <div className="flex-1">
           <ConnectWalletButton scale="lg" className="w-full">
-            <Button scale="lg" className="w-full">
+            <Button scale="lg" className="w-full" onClick={handleBuyNFT} loading={loading}>
               Mint now
             </Button>
           </ConnectWalletButton>

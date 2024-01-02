@@ -75,7 +75,10 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
           </p>
         </div>
 
-        <RoundContractInteractions round={activeRound} />
+        <RoundContractInteractions
+          round={activeRound}
+          collection={project.collection}
+        />
       </div>
     </div>
   )

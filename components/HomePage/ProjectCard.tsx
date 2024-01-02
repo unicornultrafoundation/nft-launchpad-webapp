@@ -1,9 +1,13 @@
 import Image from 'next/image'
 import Text from '@/components/Text'
-import { Project } from '@/types'
+import { Project, RoundType } from '@/types'
 import Icon from '@/components/Icon'
 import Stepper from '@/components/Stepper'
 import { useRouter } from 'next/navigation'
+import { useRoundsWithStatus } from '@/hooks/useRoundStatus'
+import { useMemo } from 'react'
+import { formatDisplayedBalance } from '@/utils'
+import { formatEther } from 'ethers'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   project: Project
@@ -11,13 +15,28 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 
 export default function ProjectCard({ project, ...rest }: Props) {
   const router = useRouter()
-  const activeStep = 1
+  const { activeRound, activeRoundIndex, roundsWithStatus } = useRoundsWithStatus(project.rounds)
 
-  const steps = [
-    { label: 'Round Zero', value: 1 },
-    { label: 'Whitelist', icon: "check", value: 2 },
-    { label: 'Public', icon: "auction", value: 3 }
-  ]
+  const getIconName = (type: RoundType) => {
+    switch (type) {
+      case 'U2UMintRoundZero':
+      case 'U2UPremintRoundZero':
+        return 'round-zero'
+      case 'U2UMintRoundWhitelist':
+      case 'U2UPremintRoundWhitelist':
+        return 'check'
+      case 'U2UMintRoundFCFS':
+      case 'U2UPremintRoundFCFS':
+      default:
+        return 'auction'
+    }
+  }
+
+  const steps = useMemo(() => {
+    return roundsWithStatus.map((round, index) => {
+      return { label: round.name, value: index, icon: round.status === 'ENDED' ? 'check' : getIconName(round.type) }
+    })
+  }, [roundsWithStatus])
 
   return (
     <div
@@ -42,25 +61,40 @@ export default function ProjectCard({ project, ...rest }: Props) {
           <div className="flex flex-col items-end gap-1">
             <div className="flex items-center gap-1">
               <Icon name="u2u-logo" width={16} height={16} />
-              <Text className="font-semibold" variant="body-18">300</Text>
+              <Text className="font-semibold" variant="body-18">
+                {formatDisplayedBalance(formatEther(activeRound?.price || 0))}
+              </Text>
               <Text className="text-secondary" variant="body-12">U2U</Text>
             </div>
             <Text className="text-secondary" variant="body-14">
-              Public Round
+              {activeRound?.name}
             </Text>
           </div>
         </div>
 
-        <Stepper current={activeStep} steps={steps} />
+        <Stepper current={activeRoundIndex} steps={steps} />
 
         <div className="mt-1 flex gap-10 justify-end items-center">
-          <Text className="text-secondary" variant="body-12">
-            End: <span className="font-medium text-primary">249d 4h 14m 20s</span>
-          </Text>
+          {activeRound?.status === 'UPCOMING' && (
+            <Text className="text-secondary" variant="body-12">
+              Start: <span className="font-medium text-primary">{activeRound.start}</span>
+            </Text>
+          )}
+          {activeRound?.status === 'ENDED' && (
+            <Text className="text-secondary" variant="body-12">
+              Ended: <span className="font-medium text-primary">{activeRound.end}</span>
+            </Text>
+          )}
+          {activeRound?.status === 'MINTING' && (
+            <Text className="text-secondary" variant="body-12">
+              Ending in: <span className="font-medium text-primary">{activeRound.end}</span>
+            </Text>
+          )}
+
 
           <div className="flex items-center gap-1">
             <Text className="text-secondary" variant="body-12">
-              Items: Open Edition
+              Items: {!!activeRound && activeRound.totalNftt > 0 ? activeRound.totalNftt : 'Open Edition'}
             </Text>
             <Icon name="u2u-logo" width={12} height={12} />
           </div>

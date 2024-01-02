@@ -27,7 +27,7 @@ const Step = ({ step: { label, icon, value }, active, ...rest }: StepProps) => {
     <div
       className={classNames(
         "w-8 h-8 rounded-full flex justify-center items-center relative",
-        active ? 'bg-success' : 'bg-blue-300',
+        active ? 'bg-success' : 'bg-blue-300'
       )}
       {...rest}>
 
@@ -46,15 +46,22 @@ const Step = ({ step: { label, icon, value }, active, ...rest }: StepProps) => {
 
 export default function Stepper({ current = 0, steps }: StepsProps) {
   const hasLabel = useMemo(() => steps.some(step => !!step.label), [steps])
+
   return (
     <div className={classNames("flex items-center", hasLabel && 'mb-6')}>
       {steps.map((item, index) => {
           const isActive = current === item.value
+          const isCompleted = item.value < current
+
           return (
             <>
-              <Step active={isActive} step={item} key={item.value} />
+              <Step active={isCompleted} step={item} key={item.value} />
               {index < steps.length - 1 && (
-                <div key={`${item.value}-${index}`} className={classNames("w-[100px] h-[2px]", isActive ? 'bg-success' : 'bg-blue-300')} />
+                <div
+                  key={`${item.value}-${index}`}
+                  className={classNames(
+                    "w-[100px] h-[2px]",
+                    isCompleted ? 'bg-success' : 'bg-blue-300')} />
               )}
             </>
           )
