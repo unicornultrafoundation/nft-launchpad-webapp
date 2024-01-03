@@ -1,5 +1,4 @@
 import { Address } from 'wagmi'
-import { BigNumberish } from 'ethers'
 import { Project, RoundStatus } from '@/types'
 
 export namespace APIParams {

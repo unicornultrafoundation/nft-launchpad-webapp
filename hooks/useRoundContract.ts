@@ -1,7 +1,8 @@
 import { AssetType, Collection, Round } from '@/types'
 import { abis } from '@/abi'
 import { waitForTransaction, writeContract } from '@wagmi/core'
-import { useAccount, useContractRead } from 'wagmi'
+import { useContractRead } from 'wagmi'
+import { getRoundAbi } from '@/utils'
 
 type FunctionName = `buy${AssetType}`
 
@@ -10,8 +11,7 @@ const getBuyFunctionName = (assetType: AssetType): FunctionName => {
 }
 
 export const useWriteRoundContract = (round: Round, collection: Collection) => {
-  const { type: roundType } = round
-  const roundAbi = abis[roundType]
+  const roundAbi = getRoundAbi(round)
 
   const onBuyNFT = async (amount?: number) => {
     const functionName = getBuyFunctionName(collection.type)
@@ -46,13 +46,17 @@ export const useWriteRoundContract = (round: Round, collection: Collection) => {
   }
 }
 
-export const useReadRoundContract = (round: Round, functionName: 'getRound' | 'getAmountBought' | 'getAmountUser' | 'soldAmountNFT', args: any[] = []) => {
-  const { type: roundType } = round
-  const roundAbi = abis[roundType]
-  const roundContract = { address: round.address, abi: roundAbi }
+export const useReadRoundContract = (
+  round: Round,
+  functionName: 'getRound' | 'getAmountBought' | 'getAmountUser' | 'soldAmountNFT',
+  args: any[]
+) => {
 
   const { data } = useContractRead({
-    ...roundContract, functionName, args
+    address: round.address,
+    abi: getRoundAbi(round),
+    functionName,
+    args
   })
 
   return data

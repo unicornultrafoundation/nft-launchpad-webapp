@@ -1,6 +1,6 @@
 import Icon from '@/components/Icon'
 import { Collection, Round } from '@/types'
-import { formatEther } from 'ethers'
+import { formatEther, MaxUint256 } from 'ethers'
 import { formatDisplayedBalance } from '@/utils'
 import RoundAction from '@/components/ProjectPage/RoundAction'
 import { useRoundStatus } from '@/hooks/useRoundStatus'
@@ -14,7 +14,6 @@ interface Props {
 
 export default function RoundContractInteractions({ round, collection }: Props) {
   const status = useRoundStatus(round)
-  // const { } = useR
 
   if (status === 'ENDED') {
     return (
@@ -99,8 +98,8 @@ export default function RoundContractInteractions({ round, collection }: Props) 
             Max
           </p>
           <p className="text-primary text-body-16 font-semibold">
-            {round?.maxPerWallet === 0 ?
-              'Open edition' :
+            {BigInt(round?.maxPerWallet) === MaxUint256 ?
+              'Unlimited' :
               <>{round?.maxPerWallet} items <span className="text-secondary">per wallet</span></>
             }
           </p>

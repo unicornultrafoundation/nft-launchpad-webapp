@@ -3,7 +3,7 @@ import Button from '@/components/Button'
 import Icon from '@/components/Icon'
 import { useAccount, useBalance } from 'wagmi'
 import { useMemo, useState } from 'react'
-import { formatEther } from 'ethers'
+import { BigNumberish, formatEther, formatUnits } from 'ethers'
 import { formatDisplayedBalance } from '@/utils'
 import { toast } from 'react-toastify'
 import { useReadRoundContract, useWriteRoundContract } from '@/hooks/useRoundContract'
@@ -20,8 +20,8 @@ interface Props {
 export default function RoundAction({ round, collection }: Props) {
   const status = useRoundStatus(round)
   const { isSubscribed, onSubscribe } = useRoundZero(round)
-  const amountBought = useReadRoundContract(round, 'getAmountBought')
   const { address } = useAccount()
+  const amountBought = useReadRoundContract(round, 'getAmountBought', [address])
   const { data } = useBalance({ address, watch: true, enabled: !!address })
   const [amount, setAmount] = useState(1)
 
@@ -119,7 +119,7 @@ export default function RoundAction({ round, collection }: Props) {
             ) : (
               <div className="flex-1">
                 <p className="text-body-14 text-secondary">
-                  Minted: <span className="text-primary font-semibold">{amountBought}/{round.maxPerWallet}</span>
+                  Minted: <span className="text-primary font-semibold">{formatUnits(String(amountBought), 0)}/{round.maxPerWallet}</span>
                 </p>
               </div>
             )}

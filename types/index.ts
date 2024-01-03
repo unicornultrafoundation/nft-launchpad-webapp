@@ -9,7 +9,7 @@ export type RoundType =
   | 'U2UPremintRoundWhitelist'
   | 'U2UPremintRoundZero'
 
-export type RoundStatus = 'MINTING' | 'ENDED' | 'UPCOMING'
+export type RoundStatus = 'MINTING' | 'ENDED' | 'UPCOMING' | 'CLAIM'
 
 export type AssetType = 'ERC721' | 'ERC1155'
 

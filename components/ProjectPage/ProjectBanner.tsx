@@ -4,6 +4,9 @@ import RoundContractInteractions from '@/components/ProjectPage/RoundContractInt
 import Link from 'next/link'
 import { Project } from '@/types'
 import { useMemo } from 'react'
+import { formatUnits } from 'ethers'
+import { useContractRead } from 'wagmi'
+import { getRoundAbi } from '@/utils'
 
 export default function ProjectPageBanner({ project }: { project: Project }) {
   const activeRound = useMemo(() => {
@@ -11,6 +14,14 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
       return Date.now() >= new Date(round.start).getTime() && Date.now() <= new Date(round.end).getTime()
     }) || project.rounds[0]
   }, [project])
+
+  const { data: roundData } = useContractRead({
+    address: activeRound.address,
+    abi: getRoundAbi(activeRound),
+    functionName: 'getRound',
+    args: [],
+    enabled: !!activeRound
+  })
 
   return (
     <div className="flex items-stretch gap-10 justify-between">
@@ -38,10 +49,12 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
               <Icon name="u2u-logo" width={24} height={24} />
               <div className="h-full w-1px bg-gray-500" />
               <p className="text-secondary text-body-16">
-                Total Items: <span className="text-primary font-medium">{activeRound?.totalNftt || 'Open Edition'}</span>
+                Total
+                Items: <span className="text-primary font-medium">{activeRound?.totalNftt || 'Open Edition'}</span>
               </p>
               <p className="text-secondary text-body-16">
-                Total Minted: <span className="text-primary font-medium">1234</span>
+                Total
+                Minted: <span className="text-primary font-medium">{formatUnits((roundData as any)?.soldAmountNFT || 0, 0)}</span>
               </p>
             </div>
 

@@ -1,3 +1,6 @@
+import { abis } from '@/abi'
+import { Round } from '@/types'
+
 export const classNames = (...classes: (string | undefined | null | boolean)[]) => {
   return classes.filter(Boolean).join(' ')
 }
@@ -40,4 +43,9 @@ export const formatDisplayedBalance = (value: string | number, digits = 2) => {
 
 export const formatThousandDelimiter = (value: string | number) => {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+export const getRoundAbi = (round: Round) => {
+  const { type: roundType } = round
+  return abis[roundType]
 }

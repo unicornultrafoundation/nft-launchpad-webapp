@@ -26,13 +26,20 @@ export default function HomePageProjectTabs() {
     { revalidateOnFocus: false }
   )
 
+  const { data: claimableProjects } = useSWR(
+    'endedProjects',
+    () => api.fetchProjects({ mode: 'CLAIM' }),
+    { revalidateOnFocus: false }
+  )
+
   const [current, setCurrent] = useState(1)
 
   const tabs = useMemo(() => [
     { label: 'Minting', value: 1, quantity: mintingProjects?.length || '0' },
     { label: 'Upcoming', value: 2, quantity: comingProjects?.length || '0' },
-    { label: 'Ended', value: 3, quantity: endedProjects?.length || '0' }
-  ], [mintingProjects, comingProjects, endedProjects])
+    { label: 'Ended', value: 3, quantity: endedProjects?.length || '0' },
+    { label: 'Claim', value: 4, quantity: claimableProjects?.length || '0' }
+  ], [mintingProjects, comingProjects, endedProjects, claimableProjects])
 
   return (
     <div className="desktop:mt-10">
@@ -41,6 +48,7 @@ export default function HomePageProjectTabs() {
       {current === 1 && <HomePageProjectList projects={mintingProjects} />}
       {current === 2 && <HomePageProjectList projects={comingProjects} />}
       {current === 3 && <HomePageProjectList projects={endedProjects} />}
+      {current === 4 && <HomePageProjectList projects={claimableProjects} />}
     </div>
   )
 }
