@@ -6,6 +6,10 @@ export namespace APIParams {
   export interface FetchProjects {
     mode?: RoundStatus
   }
+  export interface SubscribeRoundZero {
+    projectId: string
+    walletAddress: Address
+  }
 }
 
 /** API Response types **/
@@ -19,14 +23,4 @@ export namespace APIResponse {
   }
 
   export type FetchProjects = Project[]
-
-  export interface GenerateTokenId {
-    u2uId: string
-    id: string
-  }
-
-  export interface UploadMetadata {
-    metadataHash: string
-  }
-
 }

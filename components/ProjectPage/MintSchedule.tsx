@@ -35,9 +35,7 @@ export default function ProjectMintSchedule({ rounds }: { rounds: Round[] }) {
                       round.status === 'MINTING' && 'bg-white',
                       round.status === 'UPCOMING' && (isActive ? 'bg-white' : 'bg-surface-soft')
                     )}>
-                      {isCompleted && (
-                        <Icon color="white" name="check" width={16} height={16} />
-                      )}
+                      {isCompleted && <Icon color="white" name="check" width={16} height={16} />}
                     </div>
                   </div>
                   {index < rounds.length - 1 &&

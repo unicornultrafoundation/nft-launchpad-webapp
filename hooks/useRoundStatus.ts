@@ -2,6 +2,8 @@ import { Round, RoundStatus } from '@/types'
 import { useMemo } from 'react'
 
 const getRoundStatus = (round: Round) => {
+  if (!round) return 'ENDED'
+
   const startTime = new Date(round.start).getTime()
   const endTime = new Date(round.end).getTime()
   switch (true) {

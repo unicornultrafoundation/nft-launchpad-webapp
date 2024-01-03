@@ -23,10 +23,10 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
           alt="" />
       </div>
 
-      <div className="flex-1 flex flex-col justify-between">
+      <div className="flex-1 flex flex-col">
         <div className="flex flex-col gap-4 mb-8">
           <p className="font-semibold text-heading-lg leading-none">
-            Projects: Name Projects
+            Projects: {project.name}
           </p>
 
           <p className="text-secondary text-body-16">
@@ -38,10 +38,10 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
               <Icon name="u2u-logo" width={24} height={24} />
               <div className="h-full w-1px bg-gray-500" />
               <p className="text-secondary text-body-16">
-                Items: <span className="text-primary font-medium">Open Edition</span>
+                Total Items: <span className="text-primary font-medium">{activeRound?.totalNftt || 'Open Edition'}</span>
               </p>
               <p className="text-secondary text-body-16">
-                Minted: <span className="text-primary font-medium">1234</span>
+                Total Minted: <span className="text-primary font-medium">1234</span>
               </p>
             </div>
 
@@ -68,7 +68,6 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
               )}
             </div>
           </div>
-
 
           <p className="text-secondary text-body-14">
             {project.description}

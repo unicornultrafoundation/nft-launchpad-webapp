@@ -62,7 +62,7 @@
           },
           {
             "internalType": "bool",
-            "name": "isRaribleCollection",
+            "name": "isU2UCollection",
             "type": "bool"
           },
           {
@@ -160,7 +160,7 @@
         "type": "uint256"
       }
     ],
-    "name": "BuyERC1155Rarible",
+    "name": "BuyERC1155U2U",
     "type": "event"
   },
   {
@@ -222,7 +222,7 @@
         "type": "uint256"
       }
     ],
-    "name": "BuyERC721Rarible",
+    "name": "BuyERC721U2U",
     "type": "event"
   },
   {
@@ -289,7 +289,7 @@
                 "type": "uint96"
               }
             ],
-            "internalType": "struct IERC1155Rarible.Part[]",
+            "internalType": "struct IERC1155U2U.Part[]",
             "name": "creators",
             "type": "tuple[]"
           },
@@ -306,7 +306,7 @@
                 "type": "uint96"
               }
             ],
-            "internalType": "struct IERC1155Rarible.Part[]",
+            "internalType": "struct IERC1155U2U.Part[]",
             "name": "royalties",
             "type": "tuple[]"
           },
@@ -316,12 +316,12 @@
             "type": "bytes[]"
           }
         ],
-        "internalType": "struct IERC1155Rarible.Mint1155Data",
+        "internalType": "struct IERC1155U2U.Mint1155Data",
         "name": "data",
         "type": "tuple"
       }
     ],
-    "name": "buyERC1155Rarible",
+    "name": "buyERC1155U2U",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
@@ -360,7 +360,7 @@
                 "type": "uint96"
               }
             ],
-            "internalType": "struct IERC721RaribleMinimal.Part[]",
+            "internalType": "struct IERC721U2UMinimal.Part[]",
             "name": "creators",
             "type": "tuple[]"
           },
@@ -377,7 +377,7 @@
                 "type": "uint96"
               }
             ],
-            "internalType": "struct IERC721RaribleMinimal.Part[]",
+            "internalType": "struct IERC721U2UMinimal.Part[]",
             "name": "royalties",
             "type": "tuple[]"
           },
@@ -387,12 +387,12 @@
             "type": "bytes[]"
           }
         ],
-        "internalType": "struct IERC721RaribleMinimal.Mint721Data",
+        "internalType": "struct IERC721U2UMinimal.Mint721Data",
         "name": "data",
         "type": "tuple"
       }
     ],
-    "name": "buyERC721Rarible",
+    "name": "buyERC721U2U",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
@@ -492,7 +492,7 @@
           },
           {
             "internalType": "bool",
-            "name": "isRaribleCollection",
+            "name": "isU2UCollection",
             "type": "bool"
           },
           {
@@ -729,7 +729,7 @@
         "type": "bytes4"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -768,7 +768,7 @@
         "type": "bytes4"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -880,7 +880,7 @@
           },
           {
             "internalType": "bool",
-            "name": "isRaribleCollection",
+            "name": "isU2UCollection",
             "type": "bool"
           },
           {

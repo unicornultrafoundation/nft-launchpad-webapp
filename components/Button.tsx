@@ -83,7 +83,7 @@ export default function Button({
         {
           loading ? (
             <>
-              <ClipLoader color={colors.info} />
+              <ClipLoader size={20} color={colors.info} />
               {loadingText || 'Loading...'}
             </>
 

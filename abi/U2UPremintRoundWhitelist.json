@@ -62,7 +62,7 @@
           },
           {
             "internalType": "bool",
-            "name": "isRaribleCollection",
+            "name": "isU2UCollection",
             "type": "bool"
           },
           {
@@ -161,7 +161,7 @@
         "type": "uint256"
       }
     ],
-    "name": "BuyERC1155Whitelist",
+    "name": "BuyERC1155",
     "type": "event"
   },
   {
@@ -198,7 +198,7 @@
         "type": "uint256"
       }
     ],
-    "name": "BuyERC1155WhitelistRarible",
+    "name": "BuyERC1155U2U",
     "type": "event"
   },
   {
@@ -229,7 +229,7 @@
         "type": "uint256"
       }
     ],
-    "name": "BuyERC721Whitelist",
+    "name": "BuyERC721",
     "type": "event"
   },
   {
@@ -260,7 +260,7 @@
         "type": "uint256"
       }
     ],
-    "name": "BuyERC721WhitelistRarible",
+    "name": "BuyERC721U2U",
     "type": "event"
   },
   {
@@ -323,6 +323,31 @@
   {
     "inputs": [
       {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct U2UPremintBase.Token[]",
+        "name": "tokens",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "addTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address[]",
         "name": "users",
         "type": "address[]"
@@ -350,60 +375,38 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "tokenId",
+        "name": "amount",
         "type": "uint256"
-      },
+      }
+    ],
+    "name": "buyERC1155",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
       }
     ],
-    "name": "buyERC1155Whitelist",
+    "name": "buyERC1155U2U",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "buyERC1155WhitelistRarible",
+    "inputs": [],
+    "name": "buyERC721",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "buyERC721Whitelist",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "buyERC721WhitelistRarible",
+    "inputs": [],
+    "name": "buyERC721U2U",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
@@ -511,6 +514,31 @@
   },
   {
     "inputs": [],
+    "name": "getAvailableTokenIds",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct U2UPremintBase.Token[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "getCollection",
     "outputs": [
       {
@@ -522,7 +550,7 @@
           },
           {
             "internalType": "bool",
-            "name": "isRaribleCollection",
+            "name": "isU2UCollection",
             "type": "bool"
           },
           {
@@ -759,7 +787,7 @@
         "type": "bytes4"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -798,7 +826,7 @@
         "type": "bytes4"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -954,7 +982,7 @@
           },
           {
             "internalType": "bool",
-            "name": "isRaribleCollection",
+            "name": "isU2UCollection",
             "type": "bool"
           },
           {
@@ -1036,6 +1064,31 @@
       }
     ],
     "name": "setTime",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct U2UPremintBase.Token[]",
+        "name": "tokens",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "setTokens",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
