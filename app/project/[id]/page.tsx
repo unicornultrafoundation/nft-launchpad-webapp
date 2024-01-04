@@ -47,7 +47,7 @@ export default function ProjectPage() {
           <ProjectPageDescriptions project={data} />
         </div>
         <div className="flex-1">
-          <ProjectMintSchedule rounds={data.rounds} />
+          <ProjectMintSchedule rounds={data.rounds} collection={data.collection} />
         </div>
       </div>
     </div>
