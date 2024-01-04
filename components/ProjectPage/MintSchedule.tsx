@@ -1,14 +1,15 @@
 import Collapsible from '@/components/Collapsible'
-import { classNames, formatDisplayedBalance } from '@/utils'
+import { classNames, formatDisplayedBalance, getRoundAbi } from '@/utils'
 import Icon from '@/components/Icon'
 import { Collection, Round, RoundStatus } from '@/types'
-import { formatEther } from 'ethers'
+import { formatEther, formatUnits } from 'ethers'
 import { useRoundsWithStatus } from '@/hooks/useRoundStatus'
 import Button from '@/components/Button'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { format } from 'date-fns'
 import { useWriteRoundContract } from '@/hooks/useRoundContract'
+import { useAccount, useContractRead } from 'wagmi'
 
 interface ScheduleProp extends React.HTMLAttributes<HTMLDivElement> {
   round: Round
@@ -21,8 +22,19 @@ interface ScheduleProp extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const RoundSchedule = ({ round, collection, isCompleted, isActive, claimable, status, showSeparator, ...rest }: ScheduleProp) => {
+  const { address } = useAccount()
   const [loading, setLoading] = useState(false)
   const { onClaimNFT } = useWriteRoundContract(round, collection)
+  const { data: claimableAmount } = useContractRead({
+    address: round.address,
+    abi: getRoundAbi(round),
+    functionName: 'getClaimableAmount',
+    args: [address],
+    enabled: !!address,
+    watch: true,
+    select: data => data
+  })
+
 
   const handleClaimNFT = async () => {
     setLoading(true)
@@ -36,6 +48,9 @@ const RoundSchedule = ({ round, collection, isCompleted, isActive, claimable, st
       setLoading(false)
     }
   }
+useEffect(() => {
+  console.log(claimableAmount)
+}, [claimableAmount])
 
   return (
     <div className="flex items-stretch gap-2 w-full" {...rest}>
@@ -110,7 +125,9 @@ const RoundSchedule = ({ round, collection, isCompleted, isActive, claimable, st
 
           <p className="text-body-12 text-secondary">Claimable at: {format(round.claimableStart, 'yyyy/M/dd - hh:mm a')}</p>
 
-          {claimable && (
+          {(claimable
+            // && (Number(claimableAmount) > 0)
+          ) && (
             <Button scale="sm" onClick={handleClaimNFT} loading={loading}>
               Claim now
             </Button>

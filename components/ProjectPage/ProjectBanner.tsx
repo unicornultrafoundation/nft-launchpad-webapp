@@ -10,9 +10,13 @@ import { getRoundAbi } from '@/utils'
 
 export default function ProjectPageBanner({ project }: { project: Project }) {
   const activeRound = useMemo(() => {
-    return project.rounds.find(round => {
+    const active = project.rounds.find(round => {
       return Date.now() >= new Date(round.start).getTime() && Date.now() <= new Date(round.end).getTime()
-    }) || project.rounds[0]
+    })
+    const next = project.rounds.find(round => {
+      return Date.now() < new Date(round.start).getTime()
+    })
+    return active || next || project.rounds[0]
   }, [project])
 
   const { data: roundData } = useContractRead({

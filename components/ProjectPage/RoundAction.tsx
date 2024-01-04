@@ -15,9 +15,10 @@ import { useRoundZero } from '@/hooks/useRoundZero'
 interface Props {
   collection: Collection
   round: Round,
+  isWhitelisted: boolean
 }
 
-export default function RoundAction({ round, collection }: Props) {
+export default function RoundAction({ round, collection, isWhitelisted }: Props) {
   const status = useRoundStatus(round)
   const { isSubscribed, onSubscribe } = useRoundZero(round)
   const { address } = useAccount()
@@ -25,9 +26,10 @@ export default function RoundAction({ round, collection }: Props) {
     address: round.address,
     abi: getRoundAbi(round),
     functionName: 'getAmountBought',
-    args: [],
+    args: [address],
     watch: true,
-    select: data => Number(data) || 0
+    enabled: !!address,
+    select: data => formatUnits(String(data), 0)
   })
   const { data } = useBalance({ address, watch: true, enabled: !!address })
   const [amount, setAmount] = useState(1)
@@ -56,7 +58,6 @@ export default function RoundAction({ round, collection }: Props) {
         return
       }
     }
-
     setAmount(value)
   }
 
@@ -96,7 +97,11 @@ export default function RoundAction({ round, collection }: Props) {
   const renderRoundAction = () => {
     switch (status) {
       case "MINTING":
-        return (
+        return (!isWhitelisted && round.type !== 'U2UPremintRoundFCFS' && round.type !== 'U2UMintRoundFCFS') ? (
+          <p className="font-semibold text-error italic text-body-12">
+            You are not eligible to join this round
+          </p>
+        ) : (
           <div className="flex justify-between items-start">
             {collection.type === 'ERC1155' ? (
               <div className="flex-1">
@@ -126,7 +131,7 @@ export default function RoundAction({ round, collection }: Props) {
             ) : (
               <div className="flex-1">
                 <p className="text-body-14 text-secondary">
-                  Minted: {formatUnits(amountBought || 0, 0)}
+                  Minted: {amountBought}
                   <span className="text-primary font-semibold">/{round.maxPerWallet}</span>
                 </p>
               </div>
@@ -134,9 +139,13 @@ export default function RoundAction({ round, collection }: Props) {
 
             <div className="flex-1">
               <ConnectWalletButton scale="lg" className="w-full">
-                <Button scale="lg" className="w-full" onClick={handleBuyNFT} loading={loading}>
-                  {/*{}*/}
-                  Mint now
+                <Button
+                  disabled={Number(amountBought) === round.maxPerWallet}
+                  scale="lg"
+                  className="w-full"
+                  onClick={handleBuyNFT}
+                  loading={loading}>
+                  {Number(amountBought) > 0 && Number(amountBought) < round.maxPerWallet ? 'Mint another' : 'Mint Now'}
                 </Button>
               </ConnectWalletButton>
             </div>
@@ -149,7 +158,7 @@ export default function RoundAction({ round, collection }: Props) {
               Minting
               starts: <span className="text-primary font-semibold">{format(round.start, 'yyyy/M/dd - hh:mm a')}</span>
             </p>
-            {(round.type === 'U2UMintRoundZero' || round.type === 'U2UPremintRoundZero') && (
+            {(round.type === 'U2UMintRoundZero' || round.type === 'U2UPremintRoundZero') ? (
               <ConnectWalletButton scale="lg" className="w-full">
                 {!isSubscribed ? (
                   <Button scale="lg" className="w-full" onClick={handleSubscribe} loading={loading}>
@@ -160,6 +169,12 @@ export default function RoundAction({ round, collection }: Props) {
                     You have already subscribed!
                   </Button>
                 )}
+              </ConnectWalletButton>
+            ) : (
+              <ConnectWalletButton scale="lg" className="w-full">
+                <Button disabled scale="lg" className="w-full">
+                  Mint now
+                </Button>
               </ConnectWalletButton>
             )}
           </div>
