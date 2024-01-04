@@ -108,6 +108,8 @@ const RoundSchedule = ({ round, collection, isCompleted, isActive, claimable, st
             </p>
           </div>
 
+          <p className="text-body-12 text-secondary">Claimable at: {format(round.claimableStart, 'yyyy/M/dd - hh:mm a')}</p>
+
           {claimable && (
             <Button scale="sm" onClick={handleClaimNFT} loading={loading}>
               Claim now
@@ -130,7 +132,7 @@ export default function ProjectMintSchedule({ rounds, collection }: { rounds: Ro
 
       <div className="flex flex-col">
         {schedule.map((round, index) => {
-          const isCompleted = index > activeRoundIndex
+          const isCompleted = index < activeRoundIndex
           const isActive = index === activeRoundIndex
           const showSeparator = index < rounds.length - 1
 

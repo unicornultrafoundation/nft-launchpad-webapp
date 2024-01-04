@@ -1,12 +1,12 @@
 import ConnectWalletButton from '@/components/ConnectWalletButton'
 import Button from '@/components/Button'
 import Icon from '@/components/Icon'
-import { useAccount, useBalance } from 'wagmi'
+import { useAccount, useBalance, useContractRead } from 'wagmi'
 import { useMemo, useState } from 'react'
-import { BigNumberish, formatEther, formatUnits } from 'ethers'
-import { formatDisplayedBalance } from '@/utils'
+import { formatEther, formatUnits } from 'ethers'
+import { formatDisplayedBalance, getRoundAbi } from '@/utils'
 import { toast } from 'react-toastify'
-import { useReadRoundContract, useWriteRoundContract } from '@/hooks/useRoundContract'
+import { useWriteRoundContract } from '@/hooks/useRoundContract'
 import { Collection, Round } from '@/types'
 import { useRoundStatus } from '@/hooks/useRoundStatus'
 import { format } from 'date-fns'
@@ -21,7 +21,14 @@ export default function RoundAction({ round, collection }: Props) {
   const status = useRoundStatus(round)
   const { isSubscribed, onSubscribe } = useRoundZero(round)
   const { address } = useAccount()
-  const amountBought = useReadRoundContract(round, 'getAmountBought', [address])
+  const { data: amountBought } = useContractRead({
+    address: round.address,
+    abi: getRoundAbi(round),
+    functionName: 'getAmountBought',
+    args: [],
+    watch: true,
+    select: data => Number(data) || 0
+  })
   const { data } = useBalance({ address, watch: true, enabled: !!address })
   const [amount, setAmount] = useState(1)
 
@@ -119,7 +126,8 @@ export default function RoundAction({ round, collection }: Props) {
             ) : (
               <div className="flex-1">
                 <p className="text-body-14 text-secondary">
-                  Minted: <span className="text-primary font-semibold">{formatUnits(String(amountBought || 0), 0)}/{round.maxPerWallet}</span>
+                  Minted: {formatUnits(amountBought || 0, 0)}
+                  <span className="text-primary font-semibold">/{round.maxPerWallet}</span>
                 </p>
               </div>
             )}
@@ -127,6 +135,7 @@ export default function RoundAction({ round, collection }: Props) {
             <div className="flex-1">
               <ConnectWalletButton scale="lg" className="w-full">
                 <Button scale="lg" className="w-full" onClick={handleBuyNFT} loading={loading}>
+                  {/*{}*/}
                   Mint now
                 </Button>
               </ConnectWalletButton>
