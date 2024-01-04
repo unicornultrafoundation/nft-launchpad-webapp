@@ -1,6 +1,6 @@
 import Icon from '@/components/Icon'
 import { Collection, Round } from '@/types'
-import { formatEther, MaxUint256 } from 'ethers'
+import { formatEther } from 'ethers'
 import { formatDisplayedBalance } from '@/utils'
 import RoundAction from '@/components/ProjectPage/RoundAction'
 import { useRoundStatus } from '@/hooks/useRoundStatus'
@@ -98,7 +98,7 @@ export default function RoundContractInteractions({ round, collection }: Props) 
             Max
           </p>
           <p className="text-primary text-body-16 font-semibold">
-            {BigInt(round?.maxPerWallet) === MaxUint256 ?
+            {round?.maxPerWallet === 0 ?
               'Unlimited' :
               <>{round?.maxPerWallet} items <span className="text-secondary">per wallet</span></>
             }

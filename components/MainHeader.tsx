@@ -7,6 +7,7 @@ import ConnectWalletButton from '@/components/ConnectWalletButton'
 import avatar from '@/assets/default-avatar.png'
 import { shortenAddress } from '@/utils'
 import { useAccount } from 'wagmi'
+import { MARKETPLACE_URL } from '@/config/constants'
 
 export default function MainHeader() {
   const { address } = useAccount()
@@ -22,6 +23,18 @@ export default function MainHeader() {
                 height={40}
                 src={brandingSvg}
                 alt="u2u-brand" />
+            </Link>
+            <Link
+              className="font-medium text-secondary hover:text-primary transition-colors text-body-16"
+              href={MARKETPLACE_URL as string}
+              target="_blank">
+              Marketplace
+            </Link>
+            <Link
+              className="font-medium text-secondary hover:text-primary transition-colors text-body-16"
+              href="https://forms.gle/9MaNk6gQbKccqqAeA"
+              target="_blank">
+              Apply
             </Link>
           </div>
 

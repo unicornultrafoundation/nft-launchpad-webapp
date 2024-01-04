@@ -138,7 +138,7 @@ export default function RoundAction({ round, collection }: Props) {
           <div className="flex flex-col gap-4">
             <p className="text-body-14 text-secondary">
               Minting
-              starts: <span className="text-primary font-semibold">{format(round.start, 'yyyy/d/mm - hh:mm a')}</span>
+              starts: <span className="text-primary font-semibold">{format(round.start, 'yyyy/M/dd - hh:mm a')}</span>
             </p>
             {(round.type === 'U2UMintRoundZero' || round.type === 'U2UPremintRoundZero') && (
               <ConnectWalletButton scale="lg" className="w-full">

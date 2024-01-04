@@ -297,7 +297,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct U2UPremintBase.Token[]",
+        "internalType": "struct LibStructs.Token[]",
         "name": "tokens",
         "type": "tuple[]"
       }
@@ -380,31 +380,14 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [],
     "name": "claimERC1155",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [],
     "name": "claimERC721",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -478,7 +461,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct U2UPremintBase.Token[]",
+        "internalType": "struct LibStructs.Token[]",
         "name": "",
         "type": "tuple[]"
       }
@@ -529,11 +512,6 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
         "internalType": "address",
         "name": "user",
         "type": "address"
@@ -542,33 +520,21 @@
     "name": "getOwnerOfAmount",
     "outputs": [
       {
-        "internalType": "uint256",
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct LibStructs.Token[]",
         "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
-    ],
-    "name": "getOwnerOfAmountRetrieval",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        "type": "tuple[]"
       }
     ],
     "stateMutability": "view",
@@ -859,6 +825,41 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "newMaxNFTPerWallet",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct LibStructs.Token[]",
+        "name": "tokens",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "receiveTokensAndIncreaseMaxAmountNFT",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address[]",
         "name": "users",
         "type": "address[]"
@@ -1001,7 +1002,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct U2UPremintBase.Token[]",
+        "internalType": "struct LibStructs.Token[]",
         "name": "tokens",
         "type": "tuple[]"
       }

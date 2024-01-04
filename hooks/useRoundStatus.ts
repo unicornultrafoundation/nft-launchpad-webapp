@@ -22,8 +22,11 @@ export const useRoundStatus = (round: Round): RoundStatus => {
 }
 
 export const useRoundsWithStatus = (rounds: Round[]) => {
-  const roundsWithStatus: (Round & { status: RoundStatus })[] = useMemo(() => {
-    return rounds.map(round => ({ ...round, status: getRoundStatus(round) }))
+  const roundsWithStatus: (Round & { status: RoundStatus, claimable: boolean })[] = useMemo(() => {
+    return rounds.map(round => {
+      const claimable = Date.now() > new Date(round.claimableStart).getTime() && round.maxPerWallet === 0
+      return { ...round, status: getRoundStatus(round), claimable }
+    })
   }, [rounds])
 
   const activeRoundIndex = useMemo(() => {

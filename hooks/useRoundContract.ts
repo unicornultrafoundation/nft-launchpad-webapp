@@ -4,10 +4,15 @@ import { waitForTransaction, writeContract } from '@wagmi/core'
 import { useContractRead } from 'wagmi'
 import { getRoundAbi } from '@/utils'
 
-type FunctionName = `buy${AssetType}`
+type BuyFunctionName = `buy${AssetType}`
+type ClaimFunctionName = `claim${AssetType}`
 
-const getBuyFunctionName = (assetType: AssetType): FunctionName => {
+const getBuyFunctionName = (assetType: AssetType): BuyFunctionName => {
   return `buy${assetType}`
+}
+
+const getClaimFunctionName = (assetType: AssetType): ClaimFunctionName => {
+  return `claim${assetType}`
 }
 
 export const useWriteRoundContract = (round: Round, collection: Collection) => {
@@ -29,19 +34,20 @@ export const useWriteRoundContract = (round: Round, collection: Collection) => {
     return { hash: tx.hash, waitForTransaction: () => waitForTransaction({ hash: tx.hash }) }
   }
 
-  const onSubscribeRoundZero = async () => {
+  const onClaimNFT = async () => {
+    const functionName = getClaimFunctionName(collection.type)
     const tx = await writeContract({
       address: round.address,
       abi: roundAbi,
-      functionName: '',
-      args: []
+      functionName,
+      args: [],
     })
 
     return { hash: tx.hash, waitForTransaction: () => waitForTransaction({ hash: tx.hash }) }
   }
 
   return {
-    onSubscribeRoundZero,
+    onClaimNFT,
     onBuyNFT
   }
 }

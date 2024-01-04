@@ -27,6 +27,7 @@ export interface Round {
   maxPerWallet: number
   totalNftt: number
   claimableStart: string
+  claimableIds: any[]
 }
 
 export interface User {
