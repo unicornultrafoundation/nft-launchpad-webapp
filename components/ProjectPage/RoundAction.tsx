@@ -26,7 +26,7 @@ export default function RoundAction({ round, collection }: Props) {
   const [amount, setAmount] = useState(1)
 
   const estimatedCost = useMemo(() => {
-    const totalCostBN = BigInt(round.price) * BigInt(amount)
+    const totalCostBN = BigInt(round.price || 0) * BigInt(amount || 0)
     const totalCost = formatEther(totalCostBN)
     return formatDisplayedBalance(totalCost)
   }, [round, amount])
@@ -119,7 +119,7 @@ export default function RoundAction({ round, collection }: Props) {
             ) : (
               <div className="flex-1">
                 <p className="text-body-14 text-secondary">
-                  Minted: <span className="text-primary font-semibold">{formatUnits(String(amountBought), 0)}/{round.maxPerWallet}</span>
+                  Minted: <span className="text-primary font-semibold">{formatUnits(String(amountBought || 0), 0)}/{round.maxPerWallet}</span>
                 </p>
               </div>
             )}
