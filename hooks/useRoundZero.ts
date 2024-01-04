@@ -12,7 +12,8 @@ export const useRoundZero = (round: Round) => {
       projectId: round.projectId,
       walletAddress: address
     }: null,
-    (params) => api.checkIsSubscribed(params)
+    (params) => api.checkIsSubscribed(params),
+    { refreshInterval: 3000 }
   )
 
   const onSubscribe = () => {
