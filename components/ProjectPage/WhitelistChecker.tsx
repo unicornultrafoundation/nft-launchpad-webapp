@@ -35,8 +35,13 @@ export default function WhitelistChecker({ round, collection, isWhitelisted }: P
     functionName: 'getRound',
     watch: true,
   });
+  
   const maxAmountNFT = (roundInfo as any)?.maxAmountNFT;
   const soldAmountNFT = (roundInfo as any)?.soldAmountNFT;
+  const roundType = (roundInfo as any)?.roundType;
+  const maxAmountNFTPerWallet = (roundInfo as any)?.maxAmountNFTPerWallet;
+  const startClaim = (roundInfo as any)?.startClaim;
+  const price = (roundInfo as any)?.price;
 
   const { data } = useBalance({ address, watch: true, enabled: !!address })
   const [amount, setAmount] = useState(1)
@@ -131,7 +136,10 @@ export default function WhitelistChecker({ round, collection, isWhitelisted }: P
             <div className="flex-1">
               <ConnectWalletButton scale="lg" className="w-full">
                 <Button
-                  disabled={Number(amountBought) === round.maxPerWallet || maxAmountNFT == soldAmountNFT}
+                  disabled={roundType == '2' && Number(maxAmountNFT) == 0 && Number(maxAmountNFTPerWallet) == 0 && Number(startClaim) == 0 && Number(price) == 0 ?
+                    false :
+                    Number(amountBought) === round.maxPerWallet || maxAmountNFT == soldAmountNFT
+                  }
                   scale="lg"
                   className="w-full"
                   onClick={handleBuyNFT}

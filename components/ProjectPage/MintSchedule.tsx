@@ -9,7 +9,8 @@ import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { format } from 'date-fns'
 import { useWriteRoundContract } from '@/hooks/useRoundContract'
-import { useAccount, useContractRead } from 'wagmi'
+import { Address, useAccount, useContractRead } from 'wagmi'
+import MessageClaimSuccess from './ToastMessage'
 
 interface ScheduleProp extends React.HTMLAttributes<HTMLDivElement> {
   round: Round
@@ -39,8 +40,10 @@ const RoundSchedule = ({ round, collection, isCompleted, isActive, claimable, st
   const handleClaimNFT = async () => {
     setLoading(true)
     try {
-      await onClaimNFT()
-      toast.success('Your NFT(s) has been successfully claimed!')
+      const txHash = await onClaimNFT();
+      toast.success(<MessageClaimSuccess txHash={txHash.hash} profileAddress={address as Address}/>, {
+        style: { width: '110%', marginLeft: '-3vw' },
+      });
     } catch (e: any) {
       console.error(e)
       toast.error(`Error report: ${e?.message || e}`)
@@ -48,9 +51,9 @@ const RoundSchedule = ({ round, collection, isCompleted, isActive, claimable, st
       setLoading(false)
     }
   }
-useEffect(() => {
-  console.log(claimableAmount)
-}, [claimableAmount])
+  useEffect(() => {
+    console.log(claimableAmount)
+  }, [claimableAmount])
 
   return (
     <div className="flex items-stretch gap-2 w-full" {...rest}>
@@ -126,7 +129,7 @@ useEffect(() => {
           <p className="text-body-12 text-secondary">Claimable at: {format(round.claimableStart, 'yyyy/M/dd - hh:mm a')}</p>
 
           {(claimable
-            // && (Number(claimableAmount) > 0)
+            && (Number(claimableAmount) > 0)
           ) && (
             <Button scale="sm" onClick={handleClaimNFT} loading={loading}>
               Claim now

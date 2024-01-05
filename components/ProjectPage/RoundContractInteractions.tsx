@@ -60,7 +60,7 @@ export default function RoundContractInteractions({ round, collection }: Props) 
               return (
                 <div className="flex items-start gap-2">
                   <div className="w-2 h-2 mt-1 rounded-full bg-success" />
-                  {
+                  {/* {
                     (round.type === 'U2UPremintRoundZero' || round.type === 'U2UMintRoundZero') ? (
                       <div>
                         {!isWhitelisted && Number(isHolder) == 0 ? <MessageProjectNotEligible /> : ''}
@@ -72,7 +72,7 @@ export default function RoundContractInteractions({ round, collection }: Props) 
                         </div>
                       ) : ''
                     )
-                  }
+                  } */}
 
                   <div>
                     <p className="text-body-16 font-medium leading-none">
