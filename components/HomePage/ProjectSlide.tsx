@@ -57,7 +57,7 @@ export default function ProjectSlide({ project, ...rest }: Props) {
             </Text>
             <div className="flex gap-3 items-center">
               <Icon name="u2u-logo" width={24} height={24} />
-              <div className="h-full bg-gray-500 w-[1px]" />
+              <div className="desktop:h-full tablet:h-full h-[20px] bg-gray-500 w-[1px]" />
               <Text variant="body-16">
                 <span className="text-secondary">Items:</span>
                 {" "}{activeRound?.totalNftt === 0 ? 'Open Edition' : activeRound?.totalNftt || 0}
@@ -65,8 +65,8 @@ export default function ProjectSlide({ project, ...rest }: Props) {
             </div>
 
             {/** Sale data **/}
-            <div className="flex items-start gap-6">
-              <div>
+            <div className="flex items-start desktop:gap-6 tablet:gap-6 gap-1 flex-col tablet:flex-row desktop:flex-row">
+              <div className="flex items-center gap-2 tablet:gap-0 desktop:gap-0 flex-row tablet:flex-col desktop:flex-col">
                 <Text className="text-secondary" variant="body-16">
                   Round Price
                 </Text>
@@ -79,7 +79,7 @@ export default function ProjectSlide({ project, ...rest }: Props) {
                 </div>
               </div>
 
-              <div>
+              <div className="flex items-center gap-2 tablet:gap-0 desktop:gap-0 flex-row tablet:flex-col desktop:flex-col">
                 <Text className="text-secondary" variant="body-16">
                   Items
                 </Text>
