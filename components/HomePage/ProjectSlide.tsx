@@ -40,18 +40,18 @@ export default function ProjectSlide({ project, ...rest }: Props) {
 
   return (
     <div {...rest}>
-      <div className="flex justify-center desktop:gap-8 mb-10">
+      <div className="flex justify-center desktop:gap-8 mb-10 flex-col tablet:flex-row desktop:flex-row">
         {/** Project Image **/}
         <Image
           width={384}
           height={384}
           src={project.banner}
-          className="w-96 h-96 rounded-2xl"
+          className="desktop:w-96 desktop:h-96 tablet:w-96 tablet:h-96 rounded-2xl w-full h-auto"
           alt="" />
 
         <div className="flex flex-col justify-between">
           {/** Project descriptions **/}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 mb-6 desktop:mb-0 tablet:mb-0">
             <Text className="font-semibold" variant="heading-lg">
               Projects: {project.name}
             </Text>
@@ -93,8 +93,8 @@ export default function ProjectSlide({ project, ...rest }: Props) {
           {/** Project Rounds **/}
           <Stepper current={activeRoundIndex} steps={steps} />
 
-          <Link href={`/project/${project.id}`}>
-            <Button className="w-[300px]">
+          <Link className="flex desktop:w-[300px] tablet:w-[300px] w-full desktop:justify-start tablet:justify-start justify-center " href={`/project/${project.id}`}>
+            <Button className=" w-3/4 mt-12">
               Details
             </Button>
           </Link>
