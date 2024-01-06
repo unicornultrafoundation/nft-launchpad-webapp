@@ -42,11 +42,11 @@ export default function ProjectPage() {
         <ProjectPageBanner project={data} />
       </div>
 
-      <div className="flex items-start gap-6">
-        <div className="flex-1">
+      <div className="flex items-start gap-6 flex-col desktop:flex-row tablet:flex-row w-full">
+        <div className="flex-1 w-full desktop:w-auto tablet:w-auto">
           <ProjectPageDescriptions project={data} />
         </div>
-        <div className="flex-1">
+        <div className="flex-1 w-full desktop:w-auto tablet:w-auto">
           <ProjectMintSchedule rounds={data.rounds} collection={data.collection} />
         </div>
       </div>

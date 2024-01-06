@@ -51,7 +51,7 @@ export default function RoundContractInteractions({ round, collection }: Props) 
 
   return (
     <div className="w-full rounded-lg bg-surface-soft flex flex-col gap-4 p-4">
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between flex-col desktop:flex-row gap-4 desktop:gap-0">
         <p className="text-heading-sm font-semibold">{round?.name}</p>
 
         {(() => {
@@ -105,9 +105,9 @@ export default function RoundContractInteractions({ round, collection }: Props) 
 
       <div className="w-full h-[1px] bg-gray-200" />
 
-      <div className="flex items-start gap-10">
-        <div>
-          <p className="text-body-16 text-secondary font-medium mb-2">
+      <div className="flex items-start desktop:gap-10 gap-4 flex-col desktop:flex-row">
+        <div className="flex flex-row desktop:flex-col items-center desktop:items-start gap-2">
+          <p className="text-body-16 text-secondary font-medium ">
             Items
           </p>
           <p className="text-primary text-heading-sm font-semibold">
@@ -115,8 +115,8 @@ export default function RoundContractInteractions({ round, collection }: Props) 
           </p>
         </div>
 
-        <div>
-          <p className="text-body-16 text-secondary font-medium mb-2">
+        <div className="flex flex-row desktop:flex-col items-center desktop:items-start gap-2">
+          <p className="text-body-16 text-secondary font-medium">
             Price
           </p>
           <div className="flex items-center gap-2">
@@ -128,8 +128,8 @@ export default function RoundContractInteractions({ round, collection }: Props) 
           </div>
         </div>
 
-        <div>
-          <p className="text-body-16 text-secondary font-medium mb-2">
+        <div className="flex flex-row desktop:flex-col items-center desktop:items-start gap-2">
+          <p className="text-body-16 text-secondary font-medium">
             Max
           </p>
           <p className="text-primary text-body-16 font-semibold">
