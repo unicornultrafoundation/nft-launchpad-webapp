@@ -17,6 +17,9 @@ export const useLaunchpadApi = () => {
     },
     subscribeRoundZero: (params: APIParams.SubscribeRoundZero) => {
       return launchpadAPi.post(API_ENDPOINTS.SUBSCRIBE_ROUND_ZERO, params)
+    },
+    fetchSnapshot: (params: APIParams.FetchSnapshot): Promise<APIResponse.Snapshot> => {
+      return launchpadAPi.get(API_ENDPOINTS.SNAPSHOT + parseQueries(params));
     }
   }
 }

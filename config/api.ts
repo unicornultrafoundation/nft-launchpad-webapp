@@ -5,5 +5,6 @@ export const API_ENDPOINTS = {
   TOKEN_ID: '/nft/tokenId',
   UPLOAD_METADATA: '/common/upload-ipfs',
   CHECK_IS_SUBSCRIBED: '/launchpad/isSubscribed',
-  SUBSCRIBE_ROUND_ZERO: '/launchpad/subscribe'
+  SUBSCRIBE_ROUND_ZERO: '/launchpad/subscribe',
+  SNAPSHOT: '/user/projects'
 }

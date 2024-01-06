@@ -27,7 +27,9 @@ export interface Round {
   maxPerWallet: number
   totalNftt: number
   claimableStart: string
-  claimableIds: any[]
+  claimableIds: any[],
+  requiredStaking: string,
+  instruction: string,
 }
 
 export interface User {

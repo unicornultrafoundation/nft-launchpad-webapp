@@ -13,6 +13,11 @@ import WhitelistChecker from './WhitelistChecker'
 import { ZERO_COLLECTION } from '@/config/constants'
 import { Address } from "wagmi";
 import { MessageFollowInstructions, MessageOwnNFT, MessageRoundNotEligible } from './EligibleMessage'
+import useSWR from 'swr';
+import { useParams } from 'next/navigation';
+import { useLaunchpadApi } from '@/hooks/useLaunchpadApi'
+import Icon from '../Icon'
+import Link from 'next/link'
 
 interface Props {
   collection: Collection
@@ -21,10 +26,12 @@ interface Props {
 }
 
 export default function RoundAction({ round, collection, isWhitelisted }: Props) {
+  const api = useLaunchpadApi();
+  const { id } = useParams();
   const status = useRoundStatus(round)
   const { isSubscribed, onSubscribe } = useRoundZero(round);
   const { address } = useAccount()
-  const { data: isHolder } = useContractRead({
+  const { data: balanceNFT } = useContractRead({
     address: ZERO_COLLECTION as Address,
     abi: erc721ABI,
     functionName: 'balanceOf',
@@ -33,6 +40,20 @@ export default function RoundAction({ round, collection, isWhitelisted }: Props)
     enabled: !!address,
     select: data => formatUnits(String(data), 0)
   });
+  const isHolder = Number(balanceNFT) > 0;
+  const { data: snapshot } = useSWR(
+    ( address && id ? { userId: address, projectId: id } : null ),
+    (params) => api.fetchSnapshot(params)
+  );
+  
+  const midnightTime = `${round.start.split("T")[0]}T00:00:00.000Z`;
+  const now = new Date();
+  now.setUTCDate(now.getUTCDate() + 1);
+  now.setUTCHours(0, 0, 0, 0);
+  const nextSnapshot = now.toISOString();
+  
+  const eligibleStatus = Number(snapshot?.stakingTotal) >= Number(round.requiredStaking) || isHolder;
+  
   const { data: nftSymbol } = useContractRead({
     address: ZERO_COLLECTION as Address,
     abi: erc721ABI,
@@ -59,18 +80,19 @@ export default function RoundAction({ round, collection, isWhitelisted }: Props)
       case "MINTING":
         return (round.type === 'U2UPremintRoundZero' || round.type === 'U2UMintRoundZero') ? (
           <div>
-            {!isWhitelisted && Number(isHolder) == 0 ?
-              <MessageOwnNFT link='https://linktonft.com' nftSymbol={nftSymbol} /> : 
-              <WhitelistChecker round={round} collection={collection} isWhitelisted={isWhitelisted} />
-            }
+            <div>You ARE {!eligibleStatus ? `NOT` : ''} eligible to join this round</div>
+            {/* {!isWhitelisted && isHolder == false ?
+              <MessageOwnNFT link='https://linktonft.com' nftSymbol={nftSymbol} amountNFT={Number(balanceNFT)} /> : 
+            } */}
+            <WhitelistChecker round={round} collection={collection} isWhitelisted={isWhitelisted} eligibleStatus/>
           </div>
         ) : (
           (round.type === 'U2UPremintRoundWhitelist' || round.type === 'U2UMintRoundWhitelist') ? (
             <div>
-              {!isWhitelisted ? <MessageRoundNotEligible /> : <WhitelistChecker round={round} collection={collection} isWhitelisted={isWhitelisted} />}
+              {!isWhitelisted ? <MessageRoundNotEligible /> : <WhitelistChecker round={round} collection={collection} isWhitelisted={isWhitelisted} eligibleStatus/>}
             </div>
           ) : (
-            <WhitelistChecker round={round} collection={collection} isWhitelisted={isWhitelisted} />
+            <WhitelistChecker round={round} collection={collection} isWhitelisted={isWhitelisted} eligibleStatus/>
           )
         )
       case 'UPCOMING':
@@ -89,12 +111,27 @@ export default function RoundAction({ round, collection, isWhitelisted }: Props)
                   </Button>
                 ) : (
                   <>
-                    {!isWhitelisted && Number(isHolder) == 0 ? (
-                      <>
-                        <MessageOwnNFT link='https://linktonft.com' nftSymbol={nftSymbol} />
-                        <MessageFollowInstructions or={true} link='https://linktoinstructions.com' />
-                      </>
-                    ) : ''}
+                    <div>You ARE {!eligibleStatus ? 'NOT' : ''} eligible to join this round</div>
+                    <div>How to appply</div>
+                    <div>Stake U2U to join:</div>
+                    <div>Current staked amount: {snapshot?.stakingTotal} U2U</div>
+                    <div>
+                      Required Amount: {round.requiredStaking} U2U | Stake before: {format(midnightTime, 'yyyy/M/dd - hh:mm a')}
+                      { eligibleStatus ? (
+                        <span>
+                          <Icon name='verified' />
+                          <span className='text-green-500'>Qualified</span>
+                        </span>
+                        ) : ''
+                      } | {' '}
+                      <Link href="https://staking.uniultra.xyz/" className='hover: underline'>Stake more</Link>
+                      {
+                        new Date(nextSnapshot) < new Date(round.start) ?
+                        (<p className='text-sm italic'>Next snapshot: {format(nextSnapshot, 'yyyy/M/dd - hh:mm a')}</p>) :
+                        ''
+                      }
+                    </div>
+                    <MessageOwnNFT link='https://linktonft.com' nftSymbol={nftSymbol} amountNFT={Number(balanceNFT)}/>
                     <Button scale="lg" className="w-full" variant="text">
                       You have already subscribed!
                     </Button>
@@ -103,7 +140,9 @@ export default function RoundAction({ round, collection, isWhitelisted }: Props)
               </ConnectWalletButton>
             ) : (round.type === 'U2UPremintRoundWhitelist' || round.type === 'U2UMintRoundWhitelist') ? (
               <div>
-                {!isWhitelisted ? <MessageFollowInstructions or={false} link='https://linktoinstructions.com'/> : ''}
+                <div>You ARE {!isWhitelisted ? 'NOT' : ''} eligible to join this round</div>
+                {!isWhitelisted ? <div>How to appply</div> : ''}
+                {!isWhitelisted ? <MessageFollowInstructions or={false} link={round.instruction}/> : ''}
               </div>
             ) : (
               <ConnectWalletButton scale="lg" className="w-full">
