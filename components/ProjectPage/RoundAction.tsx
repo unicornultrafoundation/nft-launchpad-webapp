@@ -111,7 +111,7 @@ export default function RoundAction({ round, collection, isWhitelisted }: Props)
                   </Button>
                 ) : (
                   <>
-                    <div>You are {!eligibleStatus ? 'not' : ''} ELIGIBLE to join this round</div>
+                    <div>You are {!eligibleStatus ? 'NOT' : ''} ELIGIBLE to join this round</div>
                     <div>How to appply</div>
                     <div>Stake U2U to join:</div>
                     <div>Current staked amount: {snapshot?.stakingTotal} U2U</div>
