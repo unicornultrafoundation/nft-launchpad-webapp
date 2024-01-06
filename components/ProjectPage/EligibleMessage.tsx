@@ -14,7 +14,7 @@ export function MessageOwnNFT({ nftSymbol, link, amountNFT }: PropsMessageOwnNFT
       <div>Currently own: {amountNFT} items</div>
       {
         amountNFT > 0 ? (
-          <div>
+          <div className="flex items-center gap-1">
             <Icon name='verified' />
             <span className='text-green-500'>Qualified</span>
           </div>
@@ -24,10 +24,13 @@ export function MessageOwnNFT({ nftSymbol, link, amountNFT }: PropsMessageOwnNFT
   );
 }
 
-export function MessageRoundNotEligible() {
+interface PropsMessageRoundNotEligible {
+  eligibleStatus: boolean,
+}
+export function MessageRoundNotEligible({ eligibleStatus }: PropsMessageRoundNotEligible) {
   return (
     <p className="font-semibold text-error italic text-body-12">
-      You are not eligible to join this round
+      You are {!eligibleStatus ? `NOT` : ''} ELIGIBLE to join this round
     </p>
   )
 }

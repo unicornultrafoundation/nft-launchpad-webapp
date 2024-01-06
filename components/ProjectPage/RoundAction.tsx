@@ -80,7 +80,7 @@ export default function RoundAction({ round, collection, isWhitelisted }: Props)
       case "MINTING":
         return (round.type === 'U2UPremintRoundZero' || round.type === 'U2UMintRoundZero') ? (
           <div>
-            <div>You ARE {!eligibleStatus ? `NOT` : ''} eligible to join this round</div>
+            <div>You are {!eligibleStatus ? `NOT` : ''} ELIGIBLE to join this round</div>
             {/* {!isWhitelisted && isHolder == false ?
               <MessageOwnNFT link='https://linktonft.com' nftSymbol={nftSymbol} amountNFT={Number(balanceNFT)} /> : 
             } */}
@@ -89,7 +89,7 @@ export default function RoundAction({ round, collection, isWhitelisted }: Props)
         ) : (
           (round.type === 'U2UPremintRoundWhitelist' || round.type === 'U2UMintRoundWhitelist') ? (
             <div>
-              {!isWhitelisted ? <MessageRoundNotEligible /> : <WhitelistChecker round={round} collection={collection} isWhitelisted={isWhitelisted} eligibleStatus/>}
+              {!isWhitelisted ? <MessageRoundNotEligible eligibleStatus/> : <WhitelistChecker round={round} collection={collection} isWhitelisted={isWhitelisted} eligibleStatus/>}
             </div>
           ) : (
             <WhitelistChecker round={round} collection={collection} isWhitelisted={isWhitelisted} eligibleStatus/>
@@ -111,23 +111,23 @@ export default function RoundAction({ round, collection, isWhitelisted }: Props)
                   </Button>
                 ) : (
                   <>
-                    <div>You ARE {!eligibleStatus ? 'NOT' : ''} eligible to join this round</div>
+                    <div>You are {!eligibleStatus ? 'not' : ''} ELIGIBLE to join this round</div>
                     <div>How to appply</div>
                     <div>Stake U2U to join:</div>
                     <div>Current staked amount: {snapshot?.stakingTotal} U2U</div>
                     <div>
                       Required Amount: {round.requiredStaking} U2U | Stake before: {format(midnightTime, 'yyyy/M/dd - hh:mm a')}
                       { eligibleStatus ? (
-                        <span>
+                        <div className="flex items-center gap-1">
                           <Icon name='verified' />
                           <span className='text-green-500'>Qualified</span>
-                        </span>
-                        ) : ''
-                      } | {' '}
-                      <Link href="https://staking.uniultra.xyz/" className='hover: underline'>Stake more</Link>
+                        </div>
+                        ) : ' | '
+                      }
+                      {!eligibleStatus ? <Link href="https://staking.uniultra.xyz/" className='hover: underline'>Stake more</Link> : ''}
                       {
                         new Date(nextSnapshot) < new Date(round.start) ?
-                        (<p className='text-sm italic'>Next snapshot: {format(nextSnapshot, 'yyyy/M/dd - hh:mm a')}</p>) :
+                        (<p className='text-sm italic'>Update 12:00 AM everyday</p>) :
                         ''
                       }
                     </div>
@@ -140,7 +140,7 @@ export default function RoundAction({ round, collection, isWhitelisted }: Props)
               </ConnectWalletButton>
             ) : (round.type === 'U2UPremintRoundWhitelist' || round.type === 'U2UMintRoundWhitelist') ? (
               <div>
-                <div>You ARE {!isWhitelisted ? 'NOT' : ''} eligible to join this round</div>
+                <div>You are {!isWhitelisted ? 'NOT' : ''} ELIGIBLE to join this round</div>
                 {!isWhitelisted ? <div>How to appply</div> : ''}
                 {!isWhitelisted ? <MessageFollowInstructions or={false} link={round.instruction}/> : ''}
               </div>
