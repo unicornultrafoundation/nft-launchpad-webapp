@@ -2,6 +2,7 @@ import { Url } from "next/dist/shared/lib/router/router";
 import Link from "next/link";
 import { Address, Hash } from "viem";
 import Button from "../Button";
+import { BLOCK_EXPLORER_URL, MARKETPLACE_URL } from "@/config/constants";
 
 interface PropsMessageClaimSuccess {
   profileAddress: Address;
@@ -12,12 +13,12 @@ export default function MessageClaimSuccess({ profileAddress, txHash }: PropsMes
     <div>
       <p className="mb-2">Your NFT(s) has been successfully claimed!</p>
       <div className="flex items-center gap-1">
-        <Link href={`https://marketplace-dev.uniultra.xyz/user/${profileAddress}`} className="hover:underline text-primary">
+        <Link href={`${MARKETPLACE_URL}/user/${profileAddress}`} className="hover:underline text-primary">
           <Button scale="sm">
             View your profile
           </Button>
         </Link>
-        <Link href={`https://testnet.u2uscan.xyz/tx/${txHash}`} className="hover:underline text-primary">
+        <Link href={`${BLOCK_EXPLORER_URL}/tx/${txHash}`} className="hover:underline text-primary">
           <Button variant="secondary" scale="sm">
             View transaction
           </Button>
