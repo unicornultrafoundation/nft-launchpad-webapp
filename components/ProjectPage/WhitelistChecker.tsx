@@ -11,12 +11,13 @@ import { Collection, Round } from '@/types'
 import { useRoundStatus } from '@/hooks/useRoundStatus'
 
 interface Props {
-  collection: Collection
+  collection: Collection,
   round: Round,
-  isWhitelisted: boolean
+  isWhitelisted: boolean,
+  eligibleStatus: boolean,
 }
 
-export default function WhitelistChecker({ round, collection, isWhitelisted }: Props) {
+export default function WhitelistChecker({ round, collection, isWhitelisted, eligibleStatus }: Props) {
   const status = useRoundStatus(round)
   
   const { address } = useAccount()
@@ -136,9 +137,10 @@ export default function WhitelistChecker({ round, collection, isWhitelisted }: P
             <div className="flex-1">
               <ConnectWalletButton scale="lg" className="w-full">
                 <Button
-                  disabled={roundType == '2' && Number(maxAmountNFT) == 0 && Number(maxAmountNFTPerWallet) == 0 && Number(startClaim) == 0 && Number(price) == 0 ?
+                  disabled={
+                    (roundType == '2' && Number(maxAmountNFT) == 0 && Number(maxAmountNFTPerWallet) == 0 && Number(startClaim) == 0 && Number(price) == 0) ?
                     false :
-                    Number(amountBought) === round.maxPerWallet || maxAmountNFT == soldAmountNFT
+                    Number(amountBought) === round.maxPerWallet || maxAmountNFT == soldAmountNFT || !eligibleStatus
                   }
                   scale="lg"
                   className="w-full"

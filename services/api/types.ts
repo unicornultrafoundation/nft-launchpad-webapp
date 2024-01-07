@@ -9,6 +9,10 @@ export namespace APIParams {
     projectId: string
     walletAddress: Address
   }
+  export interface FetchSnapshot {
+    userId: `0x${string}`;
+    projectId: string | string[];
+  }
 }
 
 /** API Response types **/
@@ -22,4 +26,9 @@ export namespace APIResponse {
   }
 
   export type FetchProjects = Project[]
+
+  export interface Snapshot {
+    stakingTotal: string;
+    lastDateRecord: Date;
+  }
 }

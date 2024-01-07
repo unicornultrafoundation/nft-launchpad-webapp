@@ -1,26 +1,36 @@
 import { Url } from "next/dist/shared/lib/router/router";
 import Link from "next/link";
+import Icon from "../Icon";
 
 interface PropsMessageOwnNFT {
   nftSymbol: String | undefined;
   link: Url;
+  amountNFT: number;
 }
-export function MessageOwnNFT({ nftSymbol, link }: PropsMessageOwnNFT) {
+export function MessageOwnNFT({ nftSymbol, link, amountNFT }: PropsMessageOwnNFT) {
   return (
     <p className="font-semibold text-error italic text-body-12">
-      You must own at least 1 {' '}
-        <Link href={link}>
-          {nftSymbol}
-        </Link>
-      {' '} to be eligible for this round.
+      <div>Own <Link href={link}>Zero Collection</Link> to join</div>
+      <div>Currently own: {amountNFT} items</div>
+      {
+        amountNFT > 0 ? (
+          <div className="flex items-center gap-1">
+            <Icon name='verified' />
+            <span className='text-green-500'>Qualified</span>
+          </div>
+        ) : ''
+      }
     </p>
   );
 }
 
-export function MessageRoundNotEligible() {
+interface PropsMessageRoundNotEligible {
+  eligibleStatus: boolean,
+}
+export function MessageRoundNotEligible({ eligibleStatus }: PropsMessageRoundNotEligible) {
   return (
     <p className="font-semibold text-error italic text-body-12">
-      You are not eligible to join this round
+      You are {!eligibleStatus ? `NOT` : ''} ELIGIBLE to join this round
     </p>
   )
 }
