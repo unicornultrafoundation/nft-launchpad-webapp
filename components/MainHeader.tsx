@@ -9,13 +9,12 @@ import {MARKETPLACE_URL} from '@/config/constants'
 import {useState} from "react";
 import MenuModal from "@/components/MenuModal";
 import Icon from "@/components/Icon";
-export const HEADER_HEIGHT = 88
 
+export const HEADER_HEIGHT = 88
 
 export default function MainHeader() {
   const {address} = useAccount();
   const [showMenu, setShowMenu] = useState(false)
-
 
   return (
      <>
@@ -24,12 +23,15 @@ export default function MainHeader() {
            <div className="flex items-center ">
              <div className="hidden desktop:block tablet:block">
                <Link href="/" className="w-fit">
-                 <Image className="h-10 object-contain desktop:w-[148px] tablet:w-fit" height={100} src={brandingSvg} alt="u2u-brand" />
+                 <Image className="h-10 object-contain desktop:w-[148px] tablet:w-fit"
+                        height={100}
+                        src={brandingSvg}
+                        alt="u2u-brand"/>
                </Link>
              </div>
              <div className="block tablet:hidden">
                <Link href="/">
-                 <Icon name="u2u-logo-mobile" width={28} height={28} />
+                 <Icon name="u2u-logo-mobile" width={28} height={28}/>
                </Link>
              </div>
              <div className="flex gap-4">
@@ -50,10 +52,7 @@ export default function MainHeader() {
                  </Link>
                </div>
              </div>
-
-
            </div>
-
            <div className='flex flex-col items-end'>
              <div className="hidden tablet:block">
                <ConnectWalletButton>
@@ -69,11 +68,9 @@ export default function MainHeader() {
                  )}
                </ConnectWalletButton>
              </div>
-
              <button className="block tablet:hidden !p-0" onClick={() => setShowMenu(true)}>
                <Icon color="secondary" name="burger" width={20} height={20}/>
              </button>
-             {/*<div>{address ? `${shortenBalance(data?.formatted as string)} ${data?.symbol}` : ''} </div>*/}
            </div>
          </div>
          <MenuModal
