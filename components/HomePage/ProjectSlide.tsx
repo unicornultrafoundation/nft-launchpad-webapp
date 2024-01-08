@@ -40,24 +40,24 @@ export default function ProjectSlide({ project, ...rest }: Props) {
 
   return (
     <div {...rest}>
-      <div className="flex justify-center desktop:gap-8 mb-10">
+      <div className="flex justify-center desktop:gap-8 mb-10 flex-col tablet:flex-row desktop:flex-row">
         {/** Project Image **/}
         <Image
           width={384}
           height={384}
           src={project.banner}
-          className="w-96 h-96 rounded-2xl"
+          className="desktop:w-96 desktop:h-96 tablet:w-96 tablet:h-96 rounded-2xl w-full h-auto"
           alt="" />
 
         <div className="flex flex-col justify-between">
           {/** Project descriptions **/}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 mb-6 desktop:mb-0 tablet:mb-0">
             <Text className="font-semibold" variant="heading-lg">
               Projects: {project.name}
             </Text>
             <div className="flex gap-3 items-center">
               <Icon name="u2u-logo" width={24} height={24} />
-              <div className="h-full bg-gray-500 w-[1px]" />
+              <div className="desktop:h-full tablet:h-full h-[20px] bg-gray-500 w-[1px]" />
               <Text variant="body-16">
                 <span className="text-secondary">Items:</span>
                 {" "}{activeRound?.totalNftt === 0 ? 'Open Edition' : activeRound?.totalNftt || 0}
@@ -65,8 +65,8 @@ export default function ProjectSlide({ project, ...rest }: Props) {
             </div>
 
             {/** Sale data **/}
-            <div className="flex items-start gap-6">
-              <div>
+            <div className="flex items-start desktop:gap-6 tablet:gap-6 gap-1 flex-col tablet:flex-row desktop:flex-row">
+              <div className="flex items-center gap-2 tablet:gap-0 desktop:gap-0 flex-row tablet:flex-col desktop:flex-col">
                 <Text className="text-secondary" variant="body-16">
                   Round Price
                 </Text>
@@ -79,7 +79,7 @@ export default function ProjectSlide({ project, ...rest }: Props) {
                 </div>
               </div>
 
-              <div>
+              <div className="flex items-center gap-2 tablet:gap-0 desktop:gap-0 flex-row tablet:flex-col desktop:flex-col">
                 <Text className="text-secondary" variant="body-16">
                   Items
                 </Text>
@@ -93,8 +93,8 @@ export default function ProjectSlide({ project, ...rest }: Props) {
           {/** Project Rounds **/}
           <Stepper current={activeRoundIndex} steps={steps} />
 
-          <Link href={`/project/${project.id}`}>
-            <Button className="w-[300px]">
+          <Link className="flex desktop:w-[300px] tablet:w-[300px] w-full desktop:justify-start tablet:justify-start justify-center " href={`/project/${project.id}`}>
+            <Button className=" w-3/4 mt-12">
               Details
             </Button>
           </Link>
