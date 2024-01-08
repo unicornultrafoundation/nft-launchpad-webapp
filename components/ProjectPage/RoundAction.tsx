@@ -1,4 +1,4 @@
-import ConnectWalletButton from '@/components/ConnectWalletButton'
+import ConnectWallet from '@/components/ConnectWallet'
 import Button from '@/components/Button'
 import { erc721ABI, useAccount, useBalance, useContractRead, useContractReads } from 'wagmi'
 import { useMemo, useState } from 'react'
@@ -104,7 +104,7 @@ export default function RoundAction({ round, collection, isWhitelisted }: Props)
             </p>
 
             {(round.type === 'U2UPremintRoundZero' || round.type === 'U2UMintRoundZero') ? (
-              <ConnectWalletButton scale="lg" className="w-full">
+              <ConnectWallet scale="lg" className="w-full">
                 {!isSubscribed ? (
                   <Button scale="lg" className="w-full" onClick={handleSubscribe} loading={loading}>
                     Subscribe now
@@ -137,7 +137,7 @@ export default function RoundAction({ round, collection, isWhitelisted }: Props)
                     </Button>
                   </>
                 )}
-              </ConnectWalletButton>
+              </ConnectWallet>
             ) : (round.type === 'U2UPremintRoundWhitelist' || round.type === 'U2UMintRoundWhitelist') ? (
               <div>
                 <div>You are {!isWhitelisted ? 'NOT' : ''} ELIGIBLE to join this round</div>
@@ -145,11 +145,11 @@ export default function RoundAction({ round, collection, isWhitelisted }: Props)
                 {!isWhitelisted ? <MessageFollowInstructions or={false} link={round.instruction}/> : ''}
               </div>
             ) : (
-              <ConnectWalletButton scale="lg" className="w-full">
+              <ConnectWallet scale="lg" className="w-full">
                 <Button disabled scale="lg" className="w-full">
                   Mint now
                 </Button>
-              </ConnectWalletButton>
+              </ConnectWallet>
             )}
           </div>
         )

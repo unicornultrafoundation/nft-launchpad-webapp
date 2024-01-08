@@ -1,4 +1,4 @@
-import ConnectWalletButton from '@/components/ConnectWalletButton'
+import ConnectWallet from '@/components/ConnectWallet'
 import Button from '@/components/Button'
 import Icon from '@/components/Icon'
 import { useAccount, useBalance, useContractRead } from 'wagmi'
@@ -135,7 +135,7 @@ export default function WhitelistChecker({ round, collection, isWhitelisted, eli
             )}
 
             <div className="flex-1">
-              <ConnectWalletButton scale="lg" className="w-full">
+              <ConnectWallet scale="lg" className="w-full">
                 <Button
                   disabled={
                     (roundType == '2' && Number(maxAmountNFT) == 0 && Number(maxAmountNFTPerWallet) == 0 && Number(startClaim) == 0 && Number(price) == 0) ?
@@ -148,7 +148,7 @@ export default function WhitelistChecker({ round, collection, isWhitelisted, eli
                   loading={loading}>
                   {Number(amountBought) > 0 && Number(amountBought) < round.maxPerWallet ? 'Mint another' : 'Mint Now'}
                 </Button>
-              </ConnectWalletButton>
+              </ConnectWallet>
             </div>
           </div>
         )
