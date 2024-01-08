@@ -29,7 +29,7 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
   })
 
   return (
-    <div className="flex items-stretch gap-10 justify-between">
+    <div className="flex items-stretch gap-10 justify-between flex-col desktop:flex-row tablet:flex-row">
       <div className="flex-1">
         <Image
           className="w-full max-w-[600px] h-auto rounded-2xl"
@@ -49,7 +49,7 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
             By <span className="text-primary font-medium">{project.organization}</span>
           </p>
 
-          <div className="w-full flex items-center justify-between">
+          <div className="w-full flex desktop:items-center items-start gap-4 desktop:gap-0 justify-between flex-col desktop:flex-row">
             <div className="flex items-center gap-2">
               <Icon name="u2u-logo" width={24} height={24} />
               <div className="h-full w-1px bg-gray-500" />

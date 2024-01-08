@@ -13,7 +13,7 @@ interface Props {
 
 export default function Tabs({ current, tabs, onChangeTab }: Props) {
   return (
-    <div className="flex items-center rounded">
+    <div className="flex items-center rounded overflow-x-scroll tablet:overflow-x-auto desktop:overflow-x-auto">
       {tabs.map(tab => (
         <div
           className={classNames(
