@@ -5,12 +5,13 @@ import Link from 'next/link'
 import Image from 'next/image'
 import ConnectWalletButton from '@/components/ConnectWalletButton'
 import avatar from '@/assets/default-avatar.png'
-import { shortenAddress } from '@/utils'
-import { useAccount } from 'wagmi'
+import { shortenAddress, shortenBalance } from '@/utils'
+import { useAccount, useBalance } from 'wagmi'
 import { MARKETPLACE_URL } from '@/config/constants'
 
 export default function MainHeader() {
-  const { address } = useAccount()
+  const { address } = useAccount();
+  const { data } = useBalance({ address, enabled: !!address });
 
   return (
     <>
@@ -38,16 +39,19 @@ export default function MainHeader() {
             </Link>
           </div>
 
-          <ConnectWalletButton>
-            {!!address && (
-              <div className="flex items-center gap-2">
-                <Image src={avatar} width={40} height={40} alt="user" />
-                <p className="text-secondary font-semibold">
-                  {shortenAddress(address)}
-                </p>
-              </div>
-            )}
-          </ConnectWalletButton>
+          <div className='flex flex-col items-end'>
+            <ConnectWalletButton>
+              {!!address && (
+                <div className="flex items-center gap-2">
+                  <Image src={avatar} width={40} height={40} alt="user" />
+                  <p className="text-secondary font-semibold">
+                    {shortenAddress(address)}
+                  </p>
+                </div>
+              )}
+            </ConnectWalletButton>
+            <div>{ address ? `${shortenBalance(data?.formatted as string)} ${data?.symbol}` : '' } </div>
+          </div>
         </div>
       </nav>
     </>

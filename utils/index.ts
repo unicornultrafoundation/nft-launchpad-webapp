@@ -9,6 +9,11 @@ export const shortenAddress = (str: string, head: number = 6, tail: number = 4) 
   return `${str.substring(0, head)}...${str.substring(str.length - tail)}`
 }
 
+export const shortenBalance = (str: string, head: number = 8) => {
+  if (!str) return '';
+  return `${str.substring(0, head)}...`
+}
+
 export const parseQueries = (queries?: Record<string, any>) => {
   if (!queries) return ''
   return '?' + Object.entries(queries)
