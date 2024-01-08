@@ -52,7 +52,7 @@ export default function ProjectPageBanner({ project }: { project: Project }) {
           <div className="w-full flex desktop:items-center items-start gap-4 desktop:gap-0 justify-between flex-col desktop:flex-row">
             <div className="flex items-center gap-2">
               <Icon name="u2u-logo" width={24} height={24} />
-              <div className="h-full w-1px bg-gray-500" />
+              <div className="h-7 w-[1px] bg-surface-hard" />
               <p className="text-secondary text-body-16">
                 Total
                 Items: <span className="text-primary font-medium">{activeRound?.totalNftt || 'Open Edition'}</span>

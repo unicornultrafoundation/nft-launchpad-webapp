@@ -133,23 +133,6 @@ export default function WhitelistChecker({ round, collection, isWhitelisted, eli
                 </p>
               </div>
             )}
-
-            <div className="flex-1">
-              <ConnectWalletButton scale="lg" className="w-full">
-                <Button
-                  disabled={
-                    (roundType == '2' && Number(maxAmountNFT) == 0 && Number(maxAmountNFTPerWallet) == 0 && Number(startClaim) == 0 && Number(price) == 0) ?
-                    false :
-                    Number(amountBought) === round.maxPerWallet || maxAmountNFT == soldAmountNFT || !eligibleStatus
-                  }
-                  scale="lg"
-                  className="w-full"
-                  onClick={handleBuyNFT}
-                  loading={loading}>
-                  {Number(amountBought) > 0 && Number(amountBought) < round.maxPerWallet ? 'Mint another' : 'Mint Now'}
-                </Button>
-              </ConnectWalletButton>
-            </div>
           </div>
         )
       case 'ENDED':

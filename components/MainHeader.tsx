@@ -8,6 +8,7 @@ import avatar from '@/assets/default-avatar.png'
 import { shortenAddress, shortenBalance } from '@/utils'
 import { useAccount, useBalance } from 'wagmi'
 import { MARKETPLACE_URL } from '@/config/constants'
+import Icon from './Icon'
 
 export default function MainHeader() {
   const { address } = useAccount();
@@ -39,18 +40,25 @@ export default function MainHeader() {
             </Link>
           </div>
 
-          <div className='flex flex-col items-end'>
+          <div>
             <ConnectWalletButton>
               {!!address && (
                 <div className="flex items-center gap-2">
                   <Image src={avatar} width={40} height={40} alt="user" />
-                  <p className="text-secondary font-semibold">
+                  <div>
+                  <p className="text-primary font-semibold">
                     {shortenAddress(address)}
                   </p>
+                  <div className="flex items-center gap-1">
+                  <p className='text-body-12 font-semibold text-secondary'>{`${shortenBalance(data?.formatted || '0')}` }</p>
+                  <Icon name='u2u-logo' width={12} height={12}/>
+                  <p className='text-body-12 font-semibold text-secondary'>{data?.symbol }</p>
+                  </div>
+                  
+                  </div>
                 </div>
               )}
             </ConnectWalletButton>
-            <div>{ address ? `${shortenBalance(data?.formatted as string)} ${data?.symbol}` : '' } </div>
           </div>
         </div>
       </nav>
