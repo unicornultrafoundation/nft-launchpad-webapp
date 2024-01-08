@@ -4,7 +4,6 @@ import {
   erc721ABI,
   useAccount,
   useBalance,
-  useContractRead,
   useContractReads,
 } from 'wagmi';
 import { useMemo, useState } from 'react';
@@ -15,20 +14,15 @@ import { Collection, Round } from '@/types';
 import { useRoundStatus } from '@/hooks/useRoundStatus';
 import { format } from 'date-fns';
 import { useRoundZero } from '@/hooks/useRoundZero';
-import WhitelistChecker from './WhitelistChecker';
-import { ZERO_COLLECTION } from '@/config/constants';
+import { MARKETPLACE_URL, ZERO_COLLECTION } from '@/config/constants';
 import { Address } from 'wagmi';
-import {
-  MessageFollowInstructions,
-  MessageOwnNFT,
-  MessageRoundNotEligible,
-} from './EligibleMessage';
+import { MessageRoundNotEligible } from './EligibleMessage';
 import useSWR from 'swr';
 import { useParams } from 'next/navigation';
 import { useLaunchpadApi } from '@/hooks/useLaunchpadApi';
-import Icon from '../Icon';
+import Icon from '../../Icon';
 import Link from 'next/link';
-import { formatDisplayedBalance, getRoundAbi } from '@/utils';
+import { classNames, formatDisplayedBalance, getRoundAbi } from '@/utils';
 
 interface Props {
   collection: Collection;
@@ -51,43 +45,57 @@ export default function RoundAction({
   const { id } = useParams();
   const status = useRoundStatus(round);
   const { isSubscribed, onSubscribe } = useRoundZero(round);
+  const { data: snapshot } = useSWR(
+    address && id ? { userId: address, projectId: id } : null,
+    (params) => api.fetchSnapshot(params),
+    { refreshInterval: 3000 }
+  );
+  const hasStaked = useMemo(() => {
+    return BigInt(snapshot?.stakingTotal || 0) >= BigInt(round.requiredStaking);
+  }, [snapshot, round]);
 
-  const { data: balanceNFT } = useContractRead({
-    address: ZERO_COLLECTION as Address,
-    abi: erc721ABI,
-    functionName: 'balanceOf',
-    args: [address as Address],
+  const { data } = useContractReads({
+    contracts: [
+      {
+        address: ZERO_COLLECTION as Address,
+        abi: erc721ABI,
+        functionName: 'balanceOf',
+        args: [address as Address],
+      },
+      {
+        address: round.address,
+        abi: getRoundAbi(round),
+        functionName: 'getAmountBought',
+        args: [address],
+      },
+      {
+        address: round.address,
+        abi: getRoundAbi(round),
+        functionName: 'getRound',
+      },
+      {
+        address: ZERO_COLLECTION as Address,
+        abi: erc721ABI,
+        functionName: 'symbol',
+      },
+    ],
     watch: true,
     enabled: !!address,
-    select: (data) => formatUnits(String(data), 0),
+    select: ([balanceNFT, amountBought, roundInfo, nftSymbol]) => [
+      formatUnits(String(balanceNFT?.result), 0),
+      formatUnits(String(amountBought?.result), 0),
+      roundInfo?.result,
+      nftSymbol?.result,
+    ],
   });
+
+  const [balanceNFT, amountBought, roundInfo, nftSymbol] = useMemo(
+    () => data || [],
+    [data]
+  );
   const isHolder = useMemo(() => {
     return Number(balanceNFT) > 0;
   }, [balanceNFT]);
-
-  const { data: snapshot } = useSWR(
-    address && id ? { userId: address, projectId: id } : null,
-    (params) => api.fetchSnapshot(params)
-  );
-  const hasStaked = useMemo(() => {
-    return Number(snapshot?.stakingTotal) >= Number(round.requiredStaking);
-  }, [snapshot, round]);
-
-  const { data: amountBought } = useContractRead({
-    address: round.address,
-    abi: getRoundAbi(round),
-    functionName: 'getAmountBought',
-    args: [address],
-    watch: true,
-    enabled: !!address,
-    select: (data) => formatUnits(String(data), 0),
-  });
-  const { data: roundInfo } = useContractRead({
-    address: round.address,
-    abi: getRoundAbi(round),
-    functionName: 'getRound',
-    watch: true,
-  });
 
   const maxAmountNFT = (roundInfo as any)?.maxAmountNFT;
   const soldAmountNFT = (roundInfo as any)?.soldAmountNFT;
@@ -95,12 +103,6 @@ export default function RoundAction({
   const maxAmountNFTPerWallet = (roundInfo as any)?.maxAmountNFTPerWallet;
   const startClaim = (roundInfo as any)?.startClaim;
   const price = (roundInfo as any)?.price;
-
-  const midnightTime = `${round.start.split('T')[0]}T00:00:00.000Z`;
-  const now = new Date();
-  now.setUTCDate(now.getUTCDate() + 1);
-  now.setUTCHours(0, 0, 0, 0);
-  const nextSnapshot = now.toISOString();
 
   const eligibleStatus = useMemo(() => {
     if (
@@ -120,13 +122,6 @@ export default function RoundAction({
     return isWhitelisted;
   }, [hasStaked, round, isHolder, isWhitelisted]);
 
-  const { data: nftSymbol } = useContractRead({
-    address: ZERO_COLLECTION as Address,
-    abi: erc721ABI,
-    functionName: 'symbol',
-    watch: true,
-    enabled: !!address,
-  });
   const [loading, setLoading] = useState(false);
 
   const handleSubscribe = async () => {
@@ -165,7 +160,6 @@ export default function RoundAction({
     }
   };
 
-  const { data } = useBalance({ address, watch: true, enabled: !!address });
   const [amount, setAmount] = useState(1);
 
   const estimatedCost = useMemo(() => {
@@ -188,9 +182,9 @@ export default function RoundAction({
 
     if (value > amount) {
       if (
-        !data ||
-        !data?.value ||
-        data.value < BigInt(round.price) * BigInt(value)
+        !balanceInfo ||
+        !balanceInfo?.value ||
+        balanceInfo.value < BigInt(round.price) * BigInt(value)
       ) {
         toast.error('Not enough U2U balance');
         return;
@@ -242,7 +236,7 @@ export default function RoundAction({
                           </div>
                         </div>
 
-                        <p className='text-body-14 text-secondary'>
+                        <p className='text-body-12 text-secondary'>
                           Total:{' '}
                           <span className='text-primary font-semibold'>
                             {estimatedCost} U2U
@@ -251,7 +245,7 @@ export default function RoundAction({
                       </div>
                     ) : (
                       <div className='flex-1'>
-                        <p className='text-body-14 text-secondary'>
+                        <p className='text-body-12 text-secondary'>
                           Minted: {amountBought}
                           <span className='text-primary font-semibold'>
                             /{round.maxPerWallet}
@@ -314,61 +308,162 @@ export default function RoundAction({
                     Subscribe now
                   </Button>
                 ) : (
-                  <div className='flex flex-col gap-2'>
+                  <div className='flex flex-col gap-3'>
                     <MessageRoundNotEligible eligibleStatus={eligibleStatus} />
 
-                    <div className='flex gap-2 items-stretch'>
-                      <div className='w-1/2 border border-dashed border-gray-500/70 rounded-2xl transition-all hover:border-solid hover:border-gray-500 p-4'>
-                        <p className='font-semibold text-center'>
+                    <div className='flex flex-col desktop:flex-row gap-2 items-stretch'>
+                      <div
+                        className={classNames(
+                          'desktop:w-1/2 border-2 rounded-2xl transition-all p-4 flex flex-col gap-1',
+                          hasStaked
+                            ? ' border-success'
+                            : 'border-dashed border-gray-500/70 hover:border-gray-500 hover:border-solid'
+                        )}
+                      >
+                        <p className='font-semibold text-center text-body-18'>
                           Stake U2U to join
                         </p>
-                        <p>
-                          Current staked amount: {snapshot?.stakingTotal} U2U
-                        </p>
-                        <p>
-                          Required Amount: {round.requiredStaking} U2U | Stake
-                          before: {format(midnightTime, 'yyyy/M/dd - hh:mm a')}
-                          {isHolder ? (
-                            <div className='flex items-center gap-1'>
-                              <Icon name='verified' />
-                              <span className='text-green-500'>Qualified</span>
-                            </div>
-                          ) : (
-                            ' | '
-                          )}
-                          {!hasStaked && (
-                            <Link
-                              href='https://staking.uniultra.xyz/'
-                              className='hover: underline'
-                            >
-                              Stake more
-                            </Link>
-                          )}
-                          {new Date(nextSnapshot) < new Date(round.start) && (
-                            <p className='text-sm italic'>
-                              Update 12:00 AM everyday
-                            </p>
-                          )}
+
+                        <div className='flex items-center justify-between text-body-12'>
+                          <p className='text-secondary font-medium text-right'>
+                            Current (snapshot at{' '}
+                            {new Date(
+                              snapshot?.lastDateRecord as Date
+                            ).toLocaleDateString()}
+                            ):
+                          </p>
+
+                          <p className='text-primary font-semibold text-right'>
+                            {formatDisplayedBalance(
+                              formatEther(snapshot?.stakingTotal || 0)
+                            )}{' '}
+                            U2U
+                          </p>
+                        </div>
+
+                        <div className='flex items-center justify-between text-body-12'>
+                          <p className='text-secondary font-medium'>
+                            Required:
+                          </p>
+                          <p className='text-primary font-semibold text-right'>
+                            {formatDisplayedBalance(
+                              formatEther(round.requiredStaking)
+                            )}{' '}
+                            U2U
+                          </p>
+                        </div>
+
+                        <div className='flex items-center justify-between text-body-12'>
+                          <p className='text-secondary font-medium'>
+                            Stake before:
+                          </p>
+                          <p className='text-primary font-semibold text-right'>
+                            {format(round.stakeBefore, 'yyyy/M/dd - hh:mm a O')}
+                          </p>
+                        </div>
+
+                        <div className='flex items-center justify-between text-body-12'>
+                          <p className='text-secondary font-medium'>Status:</p>
+                          <div className='text-primary font-semibold'>
+                            {hasStaked ? (
+                              <div className='flex items-center gap-1'>
+                                <Icon name='verified' />
+                                <span className='text-success'>Qualified</span>
+                              </div>
+                            ) : (
+                              <div className='flex items-center gap-1'>
+                                <span className='text-error'>
+                                  Not Qualified
+                                </span>{' '}
+                                |{' '}
+                                <Link
+                                  href='https://staking.uniultra.xyz/'
+                                  className='hover: underline'
+                                  target='_blank'
+                                >
+                                  Stake more
+                                </Link>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <p className='text-xs text-secondary italic'>
+                          Update 12:00 AM UTC everyday
                         </p>
                       </div>
 
-                      <div className='w-1/2 border border-dashed border-gray-500/70 rounded-2xl transition-all hover:border-solid hover:border-gray-500 p-4'>
-                        <p className='font-semibold text-error italic text-body-12'>
-                          <div>
-                            Own{' '}
-                            <Link href='https://linktonft.com'>
-                              Zero Collection
-                            </Link>{' '}
-                            to join
-                          </div>
-                          <div>Currently own: {balanceNFT} items</div>
-                          {Number(balanceNFT) > 0 && (
-                            <div className='flex items-center gap-1'>
-                              <Icon name='verified' />
-                              <span className='text-green-500'>Qualified</span>
-                            </div>
-                          )}
+                      <div
+                        className={classNames(
+                          'desktop:w-1/2 order-1 border-2 rounded-2xl transition-all p-4',
+                          isHolder
+                            ? ' border-success'
+                            : 'border-dashed border-gray-500/70 hover:border-gray-500 hover:border-solid'
+                        )}
+                      >
+                        <p className='font-semibold text-center text-body-18'>
+                          Zero Collection
                         </p>
+
+                        <div className='flex items-center justify-between text-body-12'>
+                          <p className='text-secondary font-medium'>
+                            Condition:
+                          </p>
+                          <p className='text-primary font-semibold'>
+                            Own Zero Collection
+                          </p>
+                        </div>
+
+                        <div className='flex items-center justify-between text-body-12'>
+                          <p className='text-secondary font-medium'>
+                            Currently own:
+                          </p>
+                          <p className='text-primary font-semibold'>
+                            {balanceNFT} items
+                          </p>
+                        </div>
+
+                        <div className='flex items-center justify-between text-body-12'>
+                          <p className='text-secondary font-medium'>Status:</p>
+                          <div className='text-primary font-semibold'>
+                            {isHolder ? (
+                              <div className='flex items-center gap-1'>
+                                <Icon name='verified' />
+                                <span className='text-success'>
+                                  Qualified
+                                </span>{' '}
+                                |{' '}
+                                <Link
+                                  href={
+                                    MARKETPLACE_URL +
+                                    `/collection/${ZERO_COLLECTION}`
+                                  }
+                                  className='hover: underline'
+                                  target='_blank'
+                                >
+                                  Get more
+                                </Link>
+                              </div>
+                            ) : (
+                              <div className='flex items-center gap-1'>
+                                <span className='text-error'>
+                                  Not Qualified
+                                </span>{' '}
+                                |{' '}
+                                <Link
+                                  href={
+                                    MARKETPLACE_URL +
+                                    `/collection/${ZERO_COLLECTION}`
+                                  }
+                                  className='hover: underline'
+                                  target='_blank'
+                                >
+                                  Get now
+                                </Link>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -383,13 +478,17 @@ export default function RoundAction({
               <div>
                 <MessageRoundNotEligible eligibleStatus={eligibleStatus} />
                 {!eligibleStatus && (
-                  <p className="font-semibold text-secondary italic text-body-12">
-                  Follow these {' '}
-                  <Link className='text-primary hover:underline' href={round.instruction} target='_blank'>
-                    instructions
-                  </Link>
-                  {' '} to get whitelisted.
-                </p>
+                  <p className='font-semibold text-secondary italic text-body-12'>
+                    Follow these{' '}
+                    <Link
+                      className='text-primary hover:underline'
+                      href={round.instruction}
+                      target='_blank'
+                    >
+                      instructions
+                    </Link>{' '}
+                    to get whitelisted.
+                  </p>
                 )}
               </div>
             ) : (

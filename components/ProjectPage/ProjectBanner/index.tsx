@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Icon from '@/components/Icon'
-import RoundContractInteractions from '@/components/ProjectPage/RoundContractInteractions'
+import RoundContractInteractions from './RoundContractInteractions'
 import Link from 'next/link'
 import { Project } from '@/types'
 import { useMemo } from 'react'
