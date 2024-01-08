@@ -5,7 +5,7 @@ import {
   useAccount,
   useBalance,
   useContractRead,
-  useContractReads,
+  useContractReads
 } from 'wagmi';
 import { useMemo, useState } from 'react';
 import { formatEther, formatUnits } from 'ethers';
@@ -15,20 +15,15 @@ import { Collection, Round } from '@/types';
 import { useRoundStatus } from '@/hooks/useRoundStatus';
 import { format } from 'date-fns';
 import { useRoundZero } from '@/hooks/useRoundZero';
-import WhitelistChecker from './WhitelistChecker';
-import { ZERO_COLLECTION } from '@/config/constants';
+import { MARKETPLACE_URL, ZERO_COLLECTION } from '@/config/constants';
 import { Address } from 'wagmi';
-import {
-  MessageFollowInstructions,
-  MessageOwnNFT,
-  MessageRoundNotEligible,
-} from './EligibleMessage';
+import { MessageRoundNotEligible } from './EligibleMessage';
 import useSWR from 'swr';
 import { useParams } from 'next/navigation';
 import { useLaunchpadApi } from '@/hooks/useLaunchpadApi';
-import Icon from '../Icon';
+import Icon from '../../Icon';
 import Link from 'next/link';
-import { formatDisplayedBalance, getRoundAbi } from '@/utils';
+import { classNames, formatDisplayedBalance, getRoundAbi } from '@/utils';
 
 interface Props {
   collection: Collection;
@@ -39,14 +34,14 @@ interface Props {
 export default function RoundAction({
   round,
   collection,
-  isWhitelisted,
+  isWhitelisted
 }: Props) {
   const api = useLaunchpadApi();
   const { address } = useAccount();
   const { data: balanceInfo } = useBalance({
     address,
     watch: true,
-    enabled: !!address,
+    enabled: !!address
   });
   const { id } = useParams();
   const status = useRoundStatus(round);
@@ -59,7 +54,7 @@ export default function RoundAction({
     args: [address as Address],
     watch: true,
     enabled: !!address,
-    select: (data) => formatUnits(String(data), 0),
+    select: (data) => formatUnits(String(data), 0)
   });
   const isHolder = useMemo(() => {
     return Number(balanceNFT) > 0;
@@ -70,7 +65,7 @@ export default function RoundAction({
     (params) => api.fetchSnapshot(params)
   );
   const hasStaked = useMemo(() => {
-    return Number(snapshot?.stakingTotal) >= Number(round.requiredStaking);
+    return BigInt(snapshot?.stakingTotal || 0) >= BigInt(round.requiredStaking);
   }, [snapshot, round]);
 
   const { data: amountBought } = useContractRead({
@@ -80,13 +75,13 @@ export default function RoundAction({
     args: [address],
     watch: true,
     enabled: !!address,
-    select: (data) => formatUnits(String(data), 0),
+    select: (data) => formatUnits(String(data), 0)
   });
   const { data: roundInfo } = useContractRead({
     address: round.address,
     abi: getRoundAbi(round),
     functionName: 'getRound',
-    watch: true,
+    watch: true
   });
 
   const maxAmountNFT = (roundInfo as any)?.maxAmountNFT;
@@ -125,7 +120,7 @@ export default function RoundAction({
     abi: erc721ABI,
     functionName: 'symbol',
     watch: true,
-    enabled: !!address,
+    enabled: !!address
   });
   const [loading, setLoading] = useState(false);
 
@@ -212,14 +207,14 @@ export default function RoundAction({
                 round.type === 'U2UMintRoundWhitelist') && (
                 <div>
                   <MessageRoundNotEligible eligibleStatus={eligibleStatus} />
-                  <div className='flex justify-between items-start'>
+                  <div className="flex justify-between items-start">
                     {collection.type === 'ERC1155' ? (
-                      <div className='flex-1'>
-                        <div className='flex max-w-fit items-center px-4 py-3 gap-4 bg-surface-medium rounded-lg mb-3'>
+                      <div className="flex-1">
+                        <div className="flex max-w-fit items-center px-4 py-3 gap-4 bg-surface-medium rounded-lg mb-3">
                           <div onClick={() => handleAddAmount(-1)}>
                             <Icon
-                              className='cursor-pointer text-secondary'
-                              name='minus'
+                              className="cursor-pointer text-secondary"
+                              name="minus"
                               width={24}
                               height={24}
                             />
@@ -230,30 +225,30 @@ export default function RoundAction({
                             onChange={(e) =>
                               handleInputAmount(Number(e.target.value))
                             }
-                            className='border-none overflow-visible bg-transparent w-10 text-center p-0 outline-none text-body-18 font-medium'
+                            className="border-none overflow-visible bg-transparent w-10 text-center p-0 outline-none text-body-18 font-medium"
                           />
                           <div onClick={() => handleAddAmount(1)}>
                             <Icon
-                              className='cursor-pointer text-secondary'
-                              name='plus'
+                              className="cursor-pointer text-secondary"
+                              name="plus"
                               width={24}
                               height={24}
                             />
                           </div>
                         </div>
 
-                        <p className='text-body-14 text-secondary'>
+                        <p className="text-body-14 text-secondary">
                           Total:{' '}
-                          <span className='text-primary font-semibold'>
+                          <span className="text-primary font-semibold">
                             {estimatedCost} U2U
                           </span>
                         </p>
                       </div>
                     ) : (
-                      <div className='flex-1'>
-                        <p className='text-body-14 text-secondary'>
+                      <div className="flex-1">
+                        <p className="text-body-14 text-secondary">
                           Minted: {amountBought}
-                          <span className='text-primary font-semibold'>
+                          <span className="text-primary font-semibold">
                             /{round.maxPerWallet}
                           </span>
                         </p>
@@ -263,8 +258,8 @@ export default function RoundAction({
                 </div>
               )
             )}
-            <div className='flex-1'>
-              <ConnectWalletButton scale='lg' className='w-full'>
+            <div className="flex-1">
+              <ConnectWalletButton scale="lg" className="w-full">
                 <Button
                   disabled={
                     roundType == '2' &&
@@ -274,11 +269,11 @@ export default function RoundAction({
                     Number(price) == 0
                       ? false
                       : Number(amountBought) === round.maxPerWallet ||
-                        maxAmountNFT == soldAmountNFT ||
-                        !eligibleStatus
+                      maxAmountNFT == soldAmountNFT ||
+                      !eligibleStatus
                   }
-                  scale='lg'
-                  className='w-full'
+                  scale="lg"
+                  className="w-full"
                   onClick={handleBuyNFT}
                   loading={loading}
                 >
@@ -293,108 +288,185 @@ export default function RoundAction({
         );
       case 'UPCOMING':
         return (
-          <div className='flex flex-col gap-4'>
-            <p className='text-body-14 text-secondary'>
+          <div className="flex flex-col gap-4">
+            <p className="text-body-14 text-secondary">
               Minting starts:{' '}
-              <span className='text-primary font-semibold'>
+              <span className="text-primary font-semibold">
                 {format(round.start, 'yyyy/M/dd - hh:mm a')}
               </span>
             </p>
 
             {round.type === 'U2UPremintRoundZero' ||
             round.type === 'U2UMintRoundZero' ? (
-              <ConnectWalletButton scale='lg' className='w-full'>
+              <ConnectWalletButton scale="lg" className="w-full">
                 {!isSubscribed ? (
                   <Button
-                    scale='lg'
-                    className='w-full'
+                    scale="lg"
+                    className="w-full"
                     onClick={handleSubscribe}
                     loading={loading}
                   >
                     Subscribe now
                   </Button>
                 ) : (
-                  <div className='flex flex-col gap-2'>
+                  <div className="flex flex-col gap-3">
                     <MessageRoundNotEligible eligibleStatus={eligibleStatus} />
 
-                    <div className='flex gap-2 items-stretch'>
-                      <div className='w-1/2 border border-dashed border-gray-500/70 rounded-2xl transition-all hover:border-solid hover:border-gray-500 p-4'>
-                        <p className='font-semibold text-center'>
+                    <div className="flex gap-2 items-stretch">
+                      <div className={classNames(
+                        'w-1/2 border-2 rounded-2xl transition-all p-4 flex flex-col gap-1',
+                        hasStaked ? ' border-success' : 'border-dashed border-gray-500/70 hover:border-gray-500 hover:border-solid'
+                      )}>
+                        <p className="font-semibold text-center text-body-18">
                           Stake U2U to join
                         </p>
-                        <p>
-                          Current staked amount: {snapshot?.stakingTotal} U2U
-                        </p>
-                        <p>
-                          Required Amount: {round.requiredStaking} U2U | Stake
-                          before: {format(midnightTime, 'yyyy/M/dd - hh:mm a')}
-                          {isHolder ? (
-                            <div className='flex items-center gap-1'>
-                              <Icon name='verified' />
-                              <span className='text-green-500'>Qualified</span>
-                            </div>
-                          ) : (
-                            ' | '
-                          )}
-                          {!hasStaked && (
-                            <Link
-                              href='https://staking.uniultra.xyz/'
-                              className='hover: underline'
-                            >
-                              Stake more
-                            </Link>
-                          )}
-                          {new Date(nextSnapshot) < new Date(round.start) && (
-                            <p className='text-sm italic'>
-                              Update 12:00 AM everyday
-                            </p>
-                          )}
-                        </p>
+
+                        <div className="flex items-center justify-between text-body-14">
+                          <p className="text-secondary font-medium">
+                            Current staked:
+                          </p>
+                          <p className="text-primary font-semibold">
+                            {snapshot?.stakingTotal} U2U
+                          </p>
+                        </div>
+
+                        <div className="flex items-center justify-between text-body-14">
+                          <p className="text-secondary font-medium">
+                            Required:
+                          </p>
+                          <p className="text-primary font-semibold">
+                            {formatDisplayedBalance(formatEther(round.requiredStaking))} U2U
+                          </p>
+                        </div>
+
+                        <div className="flex items-center justify-between text-body-14">
+                          <p className="text-secondary font-medium">
+                            Stake before:
+                          </p>
+                          <p className="text-primary font-semibold">
+                            {format(midnightTime, 'yyyy/M/dd - hh:mm a')}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center justify-between text-body-14">
+                          <p className="text-secondary font-medium">
+                            Status:
+                          </p>
+                          <div className="text-primary font-semibold">
+                            {hasStaked ? (
+                              <div className="flex items-center gap-1">
+                                <Icon name="verified" />
+                                <span className="text-success">Qualified</span>
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-1">
+                                <Icon name="verified" />
+                                <span className="text-error">Not Qualified</span>
+                                {' '}|{' '}
+                                <Link
+                                  href="https://staking.uniultra.xyz/"
+                                  className="hover: underline"
+                                  target="_blank"
+                                >
+                                  Stake more
+                                </Link>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {new Date(nextSnapshot) < new Date(round.start) && (
+                          <p className="text-body-12 text-secondary italic">
+                            Update 12:00 AM everyday
+                          </p>
+                        )}
                       </div>
 
-                      <div className='w-1/2 border border-dashed border-gray-500/70 rounded-2xl transition-all hover:border-solid hover:border-gray-500 p-4'>
-                        <p className='font-semibold text-error italic text-body-12'>
-                          <div>
-                            Own{' '}
-                            <Link href='https://linktonft.com'>
-                              Zero Collection
-                            </Link>{' '}
-                            to join
-                          </div>
-                          <div>Currently own: {balanceNFT} items</div>
-                          {Number(balanceNFT) > 0 && (
-                            <div className='flex items-center gap-1'>
-                              <Icon name='verified' />
-                              <span className='text-green-500'>Qualified</span>
-                            </div>
-                          )}
+                      <div className={classNames(
+                        'w-1/2 border-2 rounded-2xl transition-all p-4',
+                        isHolder ? ' border-success' : 'border-dashed border-gray-500/70 hover:border-gray-500 hover:border-solid'
+                      )}>
+                        <p className="font-semibold text-center text-body-18">
+                          Zero Collection
                         </p>
+
+                        <div className="flex items-center justify-between text-body-14">
+                          <p className="text-secondary font-medium">
+                            Condition:
+                          </p>
+                          <p className="text-primary font-semibold">
+                            Own Zero Collection
+                          </p>
+                        </div>
+
+                        <div className="flex items-center justify-between text-body-14">
+                          <p className="text-secondary font-medium">
+                            Currently own:
+                          </p>
+                          <p className="text-primary font-semibold">
+                            {balanceNFT} items
+                          </p>
+                        </div>
+
+                        <div className="flex items-center justify-between text-body-14">
+                          <p className="text-secondary font-medium">
+                            Status:
+                          </p>
+                          <div className="text-primary font-semibold">
+                            {isHolder ? (
+                              <div className="flex items-center gap-1">
+                                <Icon name="verified" />
+                                <span className="text-success">Qualified</span>
+                                {' '}|{' '}
+                                <Link
+                                  href={MARKETPLACE_URL + `/collection/${ZERO_COLLECTION}`}
+                                  className="hover: underline"
+                                  target="_blank"
+                                >
+                                  Get more
+                                </Link>
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-1">
+                                <span className="text-error">Not Qualified</span>
+                                {' '}|{' '}
+                                <Link
+                                  href={MARKETPLACE_URL + `/collection/${ZERO_COLLECTION}`}
+                                  className="hover: underline"
+                                  target="_blank"
+                                >
+                                  Get now
+                                </Link>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
 
-                    <Button scale='lg' disabled className='w-full'>
+                    <Button scale="lg" disabled className="w-full">
                       You have already subscribed!
                     </Button>
                   </div>
                 )}
               </ConnectWalletButton>
             ) : round.type === 'U2UPremintRoundWhitelist' ||
-              round.type === 'U2UMintRoundWhitelist' ? (
+            round.type === 'U2UMintRoundWhitelist' ? (
               <div>
                 <MessageRoundNotEligible eligibleStatus={eligibleStatus} />
                 {!eligibleStatus && (
                   <p className="font-semibold text-secondary italic text-body-12">
-                  Follow these {' '}
-                  <Link className='text-primary hover:underline' href={round.instruction} target='_blank'>
-                    instructions
-                  </Link>
-                  {' '} to get whitelisted.
-                </p>
+                    Follow these {' '}
+                    <Link className="text-primary hover:underline" href={round.instruction} target="_blank">
+                      instructions
+                    </Link>
+                    {' '} to get whitelisted.
+                  </p>
                 )}
               </div>
             ) : (
-              <ConnectWalletButton scale='lg' className='w-full'>
-                <Button disabled scale='lg' className='w-full'>
+              <ConnectWalletButton scale="lg" className="w-full">
+                <Button disabled scale="lg" className="w-full">
                   Mint now
                 </Button>
               </ConnectWalletButton>
@@ -403,11 +475,11 @@ export default function RoundAction({
         );
       case 'ENDED':
         return (
-          <div className='w-full'>
-            <div className='text-error font-semidbold text-center text-body-18 p-4'>
+          <div className="w-full">
+            <div className="text-error font-semidbold text-center text-body-18 p-4">
               Round has Ended
             </div>
-            <Button className='w-full'>Explore collection</Button>
+            <Button className="w-full">Explore collection</Button>
           </div>
         );
       default:

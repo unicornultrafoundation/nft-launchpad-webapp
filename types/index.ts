@@ -28,7 +28,7 @@ export interface Round {
   totalNftt: number
   claimableStart: string
   claimableIds: any[],
-  requiredStaking: string,
+  requiredStaking: BigNumberish,
   instruction: string,
 }
 
