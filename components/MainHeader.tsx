@@ -1,5 +1,4 @@
 'use client'
-
 import brandingSvg from '@/assets/branding.svg'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -10,7 +9,6 @@ import {MARKETPLACE_URL} from '@/config/constants'
 import {useState} from "react";
 import MenuModal from "@/components/MenuModal";
 import Icon from "@/components/Icon";
-
 export const HEADER_HEIGHT = 88
 
 
@@ -86,4 +84,3 @@ export default function MainHeader() {
      </>
   )
 }
-

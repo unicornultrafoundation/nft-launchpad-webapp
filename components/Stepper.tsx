@@ -36,7 +36,7 @@ const Step = ({ step: { label, icon, value }, active, ...rest }: StepProps) => {
         <Text className="text-white" variant="body-12">{value}</Text>}
 
       {!!label && (
-        <Text className="absolute max-w-fit whitespace-nowrap left-0 top-[32px]">
+        <Text className="absolute max-w-fit desktop:whitespace-nowrap  whitespace-normal left-0 top-[32px]">
           {label}
         </Text>
       )}

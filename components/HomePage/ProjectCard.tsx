@@ -92,7 +92,7 @@ export default function ProjectCard({ project, ...rest }: Props) {
           )}
 
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 mt-[80px] desktop:mt-auto">
             <Text className="text-secondary" variant="body-12">
               Items: {!!activeRound && activeRound.totalNftt > 0 ? activeRound.totalNftt : 'Open Edition'}
             </Text>
