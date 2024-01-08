@@ -11,7 +11,7 @@ import { MARKETPLACE_URL } from '@/config/constants'
 
 export default function MainHeader() {
   const { address } = useAccount();
-  const { data } = useBalance({address});
+  const { data } = useBalance({ address, enabled: !!address });
 
   return (
     <>
