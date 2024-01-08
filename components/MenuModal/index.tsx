@@ -11,6 +11,7 @@ import ConnectWalletButton from "@/components/ConnectWalletButton";
 
 const modalTheme: CustomFlowbiteTheme['modal'] = {
   root: {
+    base: "fixed top-0 right-0 left-0 h-modal h-screen overflow-y-auto overflow-x-hidden md:inset-0 md:h-full",
     sizes: {
       "7xl": "max-w-8 !p-0",
       'sm': 'max-w-sm !p-0'
