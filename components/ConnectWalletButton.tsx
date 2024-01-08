@@ -81,7 +81,6 @@ export default function ConnectWalletButton({ children, className, ...rest }: Bu
       >
         <div className="p-6">
           <h1 className="text-heading-sm font-semibold text-center mb-6">Choose connect method</h1>
-
           <div className="w-full flex flex-col gap-2">
             {
               connectors.map(connector => {

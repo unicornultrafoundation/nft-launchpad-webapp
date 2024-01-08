@@ -2,6 +2,14 @@ import { Address } from 'wagmi'
 import { Project, RoundStatus } from '@/types'
 
 export namespace APIParams {
+
+  export interface Connect {
+    date: string
+    publicKey: Address
+    signature: Address
+    signer: string
+  }
+
   export interface FetchProjects {
     mode?: RoundStatus
   }
