@@ -54,3 +54,5 @@ export const getRoundAbi = (round: Round) => {
   const { type: roundType } = round
   return abis[roundType]
 }
+
+export const sleep = (millisecond: number) => new Promise((resolve) => setTimeout(resolve, millisecond))
