@@ -10,6 +10,7 @@ export const shortenAddress = (str: string, head: number = 6, tail: number = 4) 
 }
 
 export const shortenBalance = (str: string, head: number = 8) => {
+  if (!str) return '';
   return `${str.substring(0, head)}...`
 }
 
@@ -53,3 +54,5 @@ export const getRoundAbi = (round: Round) => {
   const { type: roundType } = round
   return abis[roundType]
 }
+
+export const sleep = (millisecond: number) => new Promise((resolve) => setTimeout(resolve, millisecond))

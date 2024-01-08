@@ -22,7 +22,10 @@
     "sharp": "^0.33.0",
     "slick-carousel": "^1.8.1",
     "swr": "^2.2.4",
-    "wagmi": "^1.4.11"
+    "wagmi": "^1.4.11",
+    "flowbite-react": "^0.6.4",
+    "react-device-detect": "^2.2.3",
+    "react-hook-form": "^7.48.2"
   },
   "devDependencies": {
     "@types/node": "^20",
