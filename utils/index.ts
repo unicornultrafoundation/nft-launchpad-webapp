@@ -10,6 +10,7 @@ export const shortenAddress = (str: string, head: number = 6, tail: number = 4) 
 }
 
 export const shortenBalance = (str: string, head: number = 8) => {
+  if (!str) return '';
   return `${str.substring(0, head)}...`
 }
 
