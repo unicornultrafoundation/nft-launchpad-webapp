@@ -30,6 +30,7 @@ export interface Round {
   claimableIds: any[],
   requiredStaking: BigNumberish,
   instruction: string,
+  stakeBefore: string,
 }
 
 export interface User {
