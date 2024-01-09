@@ -1,11 +1,6 @@
 import ConnectWalletButton from '@/components/ConnectWalletButton';
 import Button from '@/components/Button';
-import {
-  erc721ABI,
-  useAccount,
-  useBalance,
-  useContractReads,
-} from 'wagmi';
+import { erc721ABI, useAccount, useBalance, useContractReads } from 'wagmi';
 import { useMemo, useState } from 'react';
 import { formatEther, formatUnits } from 'ethers';
 import { toast } from 'react-toastify';
@@ -149,7 +144,10 @@ export default function RoundAction({
 
     try {
       setLoading(true);
-      const { waitForTransaction } = await onBuyNFT();
+      const { waitForTransaction } =
+        collection.type === 'ERC721'
+          ? await onBuyNFT()
+          : await onBuyNFT(amount);
       await waitForTransaction();
       toast.success('Your item has been successfully purchased!');
     } catch (e: any) {
@@ -198,65 +196,60 @@ export default function RoundAction({
       case 'MINTING':
         return (
           <>
-            {round.type === 'U2UPremintRoundZero' ||
-            round.type === 'U2UMintRoundZero' ? (
+            {(round.type === 'U2UPremintRoundZero' ||
+              round.type === 'U2UMintRoundZero' ||
+              round.type === 'U2UPremintRoundWhitelist' ||
+              round.type === 'U2UMintRoundWhitelist') && (
               <MessageRoundNotEligible eligibleStatus={eligibleStatus} />
-            ) : (
-              (round.type === 'U2UPremintRoundWhitelist' ||
-                round.type === 'U2UMintRoundWhitelist') && (
-                <div>
-                  <MessageRoundNotEligible eligibleStatus={eligibleStatus} />
-                  <div className='flex justify-between items-start'>
-                    {collection.type === 'ERC1155' ? (
-                      <div className='flex-1'>
-                        <div className='flex max-w-fit items-center px-4 py-3 gap-4 bg-surface-medium rounded-lg mb-3'>
-                          <div onClick={() => handleAddAmount(-1)}>
-                            <Icon
-                              className='cursor-pointer text-secondary'
-                              name='minus'
-                              width={24}
-                              height={24}
-                            />
-                          </div>
-
-                          <input
-                            value={amount}
-                            onChange={(e) =>
-                              handleInputAmount(Number(e.target.value))
-                            }
-                            className='border-none overflow-visible bg-transparent w-10 text-center p-0 outline-none text-body-18 font-medium'
-                          />
-                          <div onClick={() => handleAddAmount(1)}>
-                            <Icon
-                              className='cursor-pointer text-secondary'
-                              name='plus'
-                              width={24}
-                              height={24}
-                            />
-                          </div>
-                        </div>
-
-                        <p className='text-body-12 text-secondary'>
-                          Total:{' '}
-                          <span className='text-primary font-semibold'>
-                            {estimatedCost} U2U
-                          </span>
-                        </p>
-                      </div>
-                    ) : (
-                      <div className='flex-1'>
-                        <p className='text-body-12 text-secondary'>
-                          Minted: {amountBought}
-                          <span className='text-primary font-semibold'>
-                            /{round.maxPerWallet}
-                          </span>
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )
             )}
+            <div className='flex justify-between items-start'>
+              {collection.type === 'ERC1155' ? (
+                <div className='flex-1'>
+                  <div className='flex max-w-fit items-center px-4 py-3 gap-4 bg-surface-medium rounded-lg mb-3'>
+                    <div onClick={() => handleAddAmount(-1)}>
+                      <Icon
+                        className='cursor-pointer text-secondary'
+                        name='minus'
+                        width={24}
+                        height={24}
+                      />
+                    </div>
+
+                    <input
+                      value={amount}
+                      onChange={(e) =>
+                        handleInputAmount(Number(e.target.value))
+                      }
+                      className='border-none overflow-visible bg-transparent w-10 text-center p-0 outline-none text-body-18 font-medium'
+                    />
+                    <div onClick={() => handleAddAmount(1)}>
+                      <Icon
+                        className='cursor-pointer text-secondary'
+                        name='plus'
+                        width={24}
+                        height={24}
+                      />
+                    </div>
+                  </div>
+
+                  <p className='text-body-12 text-secondary'>
+                    Total:{' '}
+                    <span className='text-primary font-semibold'>
+                      {estimatedCost} U2U
+                    </span>
+                  </p>
+                </div>
+              ) : (
+                <div className='flex-1'>
+                  <p className='text-body-12 text-secondary'>
+                    Minted: {amountBought}
+                    <span className='text-primary font-semibold'>
+                      /{round.maxPerWallet}
+                    </span>
+                  </p>
+                </div>
+              )}
+            </div>
             <div className='flex-1'>
               <ConnectWalletButton scale='lg' className='w-full'>
                 <Button
